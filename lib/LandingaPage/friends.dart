@@ -67,7 +67,11 @@ class _FriendsState extends State<Friends> {
               //       builder: (context) => Chats(),
               //     ));
 
-                         Navigator.of(context).push(_createRoute());
+            Navigator.of(context).push(PageRouteBuilder(
+              pageBuilder:(context,animation,_) {
+              return Chats();
+
+              },opaque: false));
             },
             child: Container(
               padding:
@@ -151,21 +155,21 @@ class _FriendsState extends State<Friends> {
         });
   }
 }
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const 
-    Chats(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
+// Route _createRoute() {
+//   // return PageRouteBuilder(
+//   //   pageBuilder: (context, animation, secondaryAnimation) => const  Chats(),
+//   //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//   //     const begin = Offset(0.0, 1.0);
+//   //     const end = Offset.zero;
+//   //     const curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//   //     var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
+//   //     return SlideTransition(
+//   //       position: animation.drive(tween),
+//   //       child: child,
+//   //     );
+//   //   },
+//   // );
+
+  
