@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:life_app/LandingaPage/addas.dart';
 import 'package:life_app/LandingaPage/friends.dart';
+import 'package:life_app/ModalBottomSheet/cupertino_bottom_sheet.dart';
+
 import 'package:life_app/Models/conversationsImage.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+import 'chats.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -89,31 +94,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
+    ScrollController sc =ScrollController();
+   // Widget panel = _panel(sc,context);
 
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            SlidingUpPanel(
-              maxHeight: _panelHeightOpen,
-              minHeight: _panelHeightClosed,
-              body: _body(),
-              panelBuilder: (sc) => _panel(sc),
-              backdropEnabled: true,
-              backdropTapClosesPanel: true,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0)),
-              color: Color(0xff1A1A1A),
-              controller: _panelController,
-              onPanelSlide: (double ops) => setState(() {
-                _fabHeight = ops * (_panelHeightOpen - _panelHeightClosed) +
-                    _initFabHeight;
-                print(_fabHeight);
-              }),
-            ),
-          ],
+        body: CupertinoPageScaffold(
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              SlidingUpPanel(
+                maxHeight: _panelHeightOpen,
+                minHeight: _panelHeightClosed,
+                body: _body(),
+                panelBuilder: (sc) => _panel(sc,context,false),
+                backdropEnabled: true,
+                backdropTapClosesPanel: false,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+                color: Color(0xff1A1A1A),
+                controller: _panelController,
+                onPanelSlide: (double ops) {setState(() {
+                  _fabHeight = ops * (_panelHeightOpen - _panelHeightClosed) +
+                      _initFabHeight;
+                  print(_fabHeight);} );
+
+                  showCupertinoModalBottomSheet(
+                   expand: false,
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                   duration: Duration(seconds: 2),
+                   // builder: (context) => Chats(),
+                    // builder: (context) => ModalFit(),
+                    builder: (context) => _panel(sc,this.context,true),
+
+                  );
+                }),
+
+            ],
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
             fixedColor: Colors.black,
@@ -176,70 +197,85 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _panel(ScrollController sc) {
-    // f
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Container(
-              width: 30,
-              height: 5,
-              decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            ),
-          ),
-          _fabHeight >= 400
-              ? Padding(
-            padding:
-            EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 16),
-            child: SizedBox(
-              height: 45,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search friends ...",
-                  hintStyle: TextStyle(color: Colors.grey.shade600),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey.shade600,
-                    size: 28,
-                  ),
-                  filled: true,
-                  fillColor: Colors.black87,
-                  contentPadding: EdgeInsets.all(8),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
+  Widget _panel(ScrollController sc, BuildContext context, var visible) {  // f
+    return Scaffold(
+      backgroundColor: Colors.grey.shade900,
+      body: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                width: 30,
+                height: 5,
+
+                decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
               ),
             ),
-          )
-              : SizedBox(),
-          TabBar(
-            tabs: tabs,
-            controller: _tabController,
-            indicatorColor: Colors.transparent,
-            labelColor: Color(0xfff5d977),
-            unselectedLabelColor: Color(0xff666666),
-            labelStyle: GoogleFonts.roboto(textStyle: TextStyle(fontSize: 14)),
-          ),
-          Expanded(
-            child: TabBarView(
-                controller: _tabController, children: [Friends(), Addas()]),
-          )
-        ],
+            _fabHeight >= 400 || visible == true
+                ? TweenAnimationBuilder(
+              tween: Tween<double>(begin: 0, end: 1),
+              duration: Duration(seconds: 3),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value as double,
+                  child: child,
+                );
+              },
+                  child: Padding(
+              padding:
+              EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 16),
+              child: SizedBox(
+                  height: 45,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search friends ...",
+                      hintStyle: TextStyle(color: Colors.grey.shade600),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey.shade600,
+                        size: 28,
+                      ),
+                      filled: true,
+                      fillColor: Colors.black87,
+                      contentPadding: EdgeInsets.all(8),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+              ),
+            ),
+                )
+                : SizedBox(),
+            TabBar(
+              tabs: tabs,
+              controller: _tabController,
+              indicatorColor: Colors.transparent,
+              labelColor: Color(0xfff5d977),
+              unselectedLabelColor: Color(0xff666666),
+              labelStyle: GoogleFonts.roboto(textStyle: TextStyle(fontSize: 14)),
+            ),
+            Expanded(
+              child: TabBarView(
+                  controller: _tabController, children: [Friends(), Addas()]),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -361,7 +397,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   duration: Duration(seconds: 6),
                                   // delay: Duration(milliseconds: 100),
                                   child: SlideAnimation(
-
                                     verticalOffset: 700,
                                     // curve: es.easeOutQuint,
                                     curve: Curves.linearToEaseOut,
