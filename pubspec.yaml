@@ -26,8 +26,6 @@ dependencies:
   sliding_up_panel: ^2.0.0
   flutter_staggered_animations: ^1.0.0
   google_fonts: 2.1.1
-  
-  
   cached_network_image: ^3.0.0
 
 
@@ -61,6 +59,10 @@ flutter:
     - assets/chat_new.png
     - assets/emojione_monotone_game_die.png
     - assets/home_smile.png
+    - assets/frame_2.png
+    - assets/frame_3.png
+    - assets/frame_4.png
+    - assets/frame_6.png
 
 
   #   - images/a_dot_ham.jpeg
