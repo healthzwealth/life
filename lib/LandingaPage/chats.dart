@@ -1,104 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:life_app/Models/friendsModel.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Chats extends StatefulWidget {
- 
+  const Chats({Key? key}) : super(key: key);
 
   @override
   _ChatsState createState() => _ChatsState();
 }
 
 class _ChatsState extends State<Chats> {
- 
-  @override
-  Widget build(BuildContext context) {
- return Scaffold(
-backgroundColor: Colors.transparent,
-body:LayoutBuilder(
-  builder: (context,constraints)
-  {
-
-    return Container(
-child: TweenAnimationBuilder(
-
-  tween: Tween(begin:0.0, end: 1.0),
-  duration:Duration(milliseconds:900),
-  child:ChatsPage(),
-  builder:(context,value,child){
-   return ShaderMask(
-     blendMode: BlendMode.modulate,
-     shaderCallback:(rect){
-    
-   return RadialGradient(
- 
-     radius: (value!=null? (value as double)*5 :5.00) ,
-colors:[Colors.white,Colors.white,Colors.transparent,Colors.transparent],
-// stops:[0.0,0.55,0.6,1.0],
-stops:[1.0,0.65,0.5,0.0],
-center:FractionalOffset(0.0,0.65)
-
-   ).createShader(rect);
-   },
-  
-   child:child,
-   );
-  },
-),
-    );
-  }
-),
-
- );
-  }
-}
-class ChatsPage extends StatelessWidget {
-
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hi!',
         date: 'today',
-        imageURL: "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender"),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hello!',
         date: 'today',
-        imageURL: "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "receiver"),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Happy Birthday!',
         date: 'today',
-        imageURL: "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender"),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Thank you!',
         date: 'today',
-        imageURL: "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "receiver"),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
         date: 'today',
-        imageURL: "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "receiver"),
   ];
   @override
   Widget build(BuildContext context) {
- 
-          return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        elevation: 2,
+        elevation: 0,
         automaticallyImplyLeading: false,
-        shadowColor: Colors.yellow[100],
-        
         backgroundColor: Colors.grey[800],
         flexibleSpace: SafeArea(
           child: Container(
@@ -120,7 +80,7 @@ class ChatsPage extends StatelessWidget {
                 CircleAvatar(
                   backgroundImage: NetworkImage(
                       "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg"),
-                  maxRadius: 20,
+                  maxRadius: 18,
                 ),
                 SizedBox(
                   width: 12,
@@ -131,11 +91,12 @@ class ChatsPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Name   >",
+                        "Name",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600,color: Colors.white70),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white70),
                       ),
-                    
                       SizedBox(
                         height: 6,
                       ),
@@ -143,170 +104,177 @@ class ChatsPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                   width: 38,
-        height: 38,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    color:  Colors.grey[850],
-                        ),
-               
-              child: Icon(
-                  Icons.headphones_rounded,
-                  color: Colors.white,
-                  
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[850],
+                  ),
+                  child: Icon(
+                    Icons.headphones_rounded,
+                    color: Colors.white,
+                  ),
                 ),
-                   ),
               ],
             ),
           ),
         ),
       ),
       body: Container(
-        height:700,
-            decoration: BoxDecoration(
-               
-                    color:  Colors.grey[800],
-                        ),
-        child:Stack(children: <Widget>[
-        
-        ListView.builder(
-          itemCount: messages.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return Container(
-            
-              padding:
-                  EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-              child: Align(
-                alignment: (messages[index].messageType == "receiver"
-                    ? Alignment.topLeft
-                    : Alignment.topRight),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: (messages[index].messageType == "receiver"
-                        ? Colors.grey[600]
-                        : Colors.grey[900]),
-                  ),
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    messages[index].text,
-                    style: TextStyle(fontSize: 15, color: Colors.white),
-                  ),
-                ),
-              ),
-            );
-          },
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
         ),
-        
-       Padding(
-                      padding: const EdgeInsets.only(top: 0, bottom: 0),
-                      child: Transform(
-                        transform: Matrix4.translationValues(200, 580, 0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                           child: Container(
-                             width: 38,
-        height: 38,
-                    decoration: BoxDecoration(
-                     border: Border.all(color: Colors.white70, //                   <--- border color
-      width: 2.0,
-),
-                    color:  Colors.grey[800],
-                      shape: BoxShape.circle
-                        ),
-              child: Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  
+        child: Column(children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: messages.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                  child: Align(
+                    alignment: (messages[index].messageType == "receiver"
+                        ? Alignment.topLeft
+                        : Alignment.topRight),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        // border: RoundedRectangleBorder(),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
+                            bottomLeft:
+                                messages[index].messageType == "receiver"
+                                    ? Radius.circular(0)
+                                    : Radius.circular(20),
+                            bottomRight:
+                                messages[index].messageType == "receiver"
+                                    ? Radius.circular(20)
+                                    : Radius.circular(0)),
+                        color: (messages[index].messageType == "receiver"
+                            ? Colors.grey[600]
+                            : Colors.grey[900]),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        messages[index].text,
+                        style: GoogleFonts.roboto(
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal)),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            // padding: EdgeInsets.symmetric(horizontal: 8),
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.black,
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.photo_camera,
+                    color: Colors.grey[800],
+                  ),
                 ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.keyboard_voice,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 0, top: 15, bottom: 15),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        fillColor: Colors.grey.shade900,
+                        filled: true,
+                        hintText: 'message',
+                        contentPadding: EdgeInsets.only(top: 10, left: 10),
+                        suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.emoji_emotions_outlined,
+                              color: Colors.grey.shade600,
+                            )),
+                        hintStyle: TextStyle(
+                            color: Colors.grey.shade400,
+                            fontWeight: FontWeight.bold),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        // border: InputBorder.none
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                    ),),
-                    Padding(padding:  const EdgeInsets.only(top: 0, bottom: 0),
-
-                     child: Transform(
-                        transform: Matrix4.translationValues(0, 620, 0),
-                        child:Container(
-                          width:400,
-                          height:100,
-                            decoration: BoxDecoration(
-            color: Colors.grey[900], ),
-
-
-  child: Row(
-    children: <Widget>[
-      
-                   Transform(
-                        transform: Matrix4.translationValues(0, -13, 0),
-                          child: InkWell(
-        child:IconButton(
-                icon: Icon(Icons.photo_camera,color: Colors.grey[800],),
-                onPressed: () {},
-              ),),),
-         Transform(
-                        transform: Matrix4.translationValues(0, -13, 0),
-        child: InkWell(
-          child:IconButton(
-                icon: Icon(Icons.keyboard_voice,color: Colors.grey[800],),
-                onPressed: () {},
-              ),
-         
-        ),
-      ),
-          
-Expanded(
-  child:
-             Transform(transform: Matrix4.translationValues(0, -13, 0) ,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[800],
-            borderRadius: BorderRadius.circular(35.0),
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 3),
-              )
-               
-            ],
-          ),
-          child: Row(
-            children: <Widget>[
-              
-            
-             
-           Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left:15),
-                  child: TextField(
-                    
-                    decoration: InputDecoration(
-                      fillColor: Colors.grey[350],
-                        hintText: "message",
-                        border: InputBorder.none),
+                    ),
                   ),
-                ),),
-              
-            
-              IconButton(
-                icon: Icon(Icons.emoji_emotions_sharp,color: Colors.grey),
-                onPressed: () {},
-              ),
-            ],
+                )
+              ],
+            ),
           ),
-        ),
+          // Container(
+          //   height: 80,
+          //   decoration: BoxDecoration(
+          //     color: Colors.grey[900],
+          //   ),
+          //   child: Row(
+          //     children: <Widget>[
+          //       Transform(
+          //         transform: Matrix4.translationValues(0, -13, 0),
+          //         child: InkWell(
+          //           child: IconButton(
+          //             icon: Icon(
+          //               Icons.photo_camera,
+          //               color: Colors.grey[800],
+          //             ),
+          //             onPressed: () {},
+          //           ),
+          //         ),
+          //       ),
+          //       Transform(
+          //         transform: Matrix4.translationValues(0, -13, 0),
+          //         child: InkWell(
+          //           child: IconButton(
+          //             icon: Icon(
+          //               Icons.keyboard_voice,
+          //               color: Colors.grey[800],
+          //             ),
+          //             onPressed: () {},
+          //           ),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(left: 15),
+          //         child: TextField(
+          //           decoration: InputDecoration(
+          //               fillColor: Colors.grey[350],
+          //               hintText: "message",
+          //               border: InputBorder.none),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+        ]),
       ),
-             ),
-  
-    ],
-  ),
-)
-  ,)                   )
-
-      ]),
-      ),  
     );
-    
   }
 }
