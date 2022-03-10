@@ -2,13 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:life_app/Models/friendsModel.dart';
 
 class Chats extends StatefulWidget {
-  const Chats({Key? key}) : super(key: key);
+ 
 
   @override
   _ChatsState createState() => _ChatsState();
 }
 
 class _ChatsState extends State<Chats> {
+ 
+  @override
+  Widget build(BuildContext context) {
+ return Scaffold(
+backgroundColor: Colors.transparent,
+body:LayoutBuilder(
+  builder: (context,constraints)
+  {
+
+    return Container(
+child: TweenAnimationBuilder(
+
+  tween: Tween(begin:0.0, end: 1.0),
+  duration:Duration(milliseconds:900),
+  child:ChatsPage(),
+  builder:(context,value,child){
+   return ShaderMask(
+     blendMode: BlendMode.modulate,
+     shaderCallback:(rect){
+    
+   return RadialGradient(
+ 
+     radius: (value!=null? (value as double)*5 :5.00) ,
+colors:[Colors.white,Colors.white,Colors.transparent,Colors.transparent],
+// stops:[0.0,0.55,0.6,1.0],
+stops:[1.0,0.65,0.5,0.0],
+center:FractionalOffset(0.0,0.65)
+
+   ).createShader(rect);
+   },
+  
+   child:child,
+   );
+  },
+),
+    );
+  }
+),
+
+ );
+  }
+}
+class ChatsPage extends StatelessWidget {
+
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
@@ -48,7 +92,8 @@ class _ChatsState extends State<Chats> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+ 
+          return Scaffold(
       appBar: AppBar(
         elevation: 2,
         automaticallyImplyLeading: false,
@@ -262,5 +307,6 @@ Expanded(
       ]),
       ),  
     );
+    
   }
 }
