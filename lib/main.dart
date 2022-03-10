@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:life_app/LandingaPage/landingPage.dart';
-import 'package:life_app/LandingaPage/reactionEmojiBox.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -17,10 +17,7 @@ class MyApp extends StatelessWidget {
         ),
       home: HomePage(),
       
-          routes: {
-            ReactionEmojiBox.routeName: (context) => ReactionEmojiBox()
-            }
-       
+          
         
         );
   }

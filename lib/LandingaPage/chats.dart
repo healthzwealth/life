@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:life_app/LandingaPage/sentMessage.dart';
-//import 'package:life_app/LandingaPage/receivedMessage.dart';
+
 import 'package:life_app/LandingaPage/receivedMessage.dart';
 class Chats extends StatefulWidget {
   @override

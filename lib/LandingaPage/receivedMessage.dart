@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:life_app/LandingaPage/chatBubble.dart';
 import 'dart:math' as math;
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:life_app/LandingaPage/reactionEmojiBox.dart';
+
 
 //Received message bubble
 class InBubble extends StatefulWidget {
@@ -56,9 +56,7 @@ bool isSelected = false;
           ),
         ],
       ),
-      child:GestureDetector(
-       onLongPress: toggleSelection,
-       
+
       child: Stack(
         //mainAxisAlignment: MainAxisAlignment.start,
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,20 +88,13 @@ bool isSelected = false;
                       ),
                     ),
                   ),
-               (isSelected == true)?      
-                   Container(
-               height:140,
-                     child:Transform(
-                     transform: Matrix4.translationValues(-5,-180,0),
-                 child:Transform(transform: Matrix4.translationValues(-0,0,0),
-                      child:ReactionEmojiBox())
-                    ))
-                                                              :Container(),     
+            
+                                                         
                   
             
         ],
       ),
-      ),
+
     );
   }
 
