@@ -1,20 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:life_app/LandingaPage/addas.dart';
 import 'package:life_app/LandingaPage/friends.dart';
-import 'package:life_app/ModalBottomSheet/cupertino_bottom_sheet.dart';
-
 import 'package:life_app/Models/conversationsImage.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:rive/rive.dart' as rive;
-
-import 'chats.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -110,47 +105,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
-    ScrollController sc =ScrollController();
-   // Widget panel = _panel(sc,context);
 
     return SafeArea(
       child: Scaffold(
-        body: CupertinoPageScaffold(
-          child:
-          Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              SlidingUpPanel(
-                maxHeight: _panelHeightOpen,
-                minHeight: _panelHeightClosed,
-                body: _body(),
-                panelBuilder: (sc) => _panel(sc,context,false),
-                backdropEnabled: true,
-                backdropTapClosesPanel: false,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0)),
-                color: Color(0xff1A1A1A),
-                controller: _panelController,
-                onPanelSlide: (double ops) {setState(() {
-                  _fabHeight = ops * (_panelHeightOpen - _panelHeightClosed) +
-                      _initFabHeight;
-                  print(_fabHeight);} );
-
-                  showCupertinoModalBottomSheet(
-                   expand: false,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                   duration: Duration(seconds: 2),
-                   // builder: (context) => Chats(),
-                    // builder: (context) => ModalFit(),
-                    builder: (context) => _panel(sc,this.context,true),
-
-                  );
-                }),
-
-            ],
-          ),
+        body: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            SlidingUpPanel(
+              maxHeight: _panelHeightOpen,
+              minHeight: _panelHeightClosed,
+              body: _body(),
+              panelBuilder: (sc) => _panel(sc),
+              backdropEnabled: true,
+              backdropTapClosesPanel: true,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
+              color: Color(0xff1A1A1A),
+              controller: _panelController,
+              onPanelSlide: (double ops) => setState(() {
+                _fabHeight = ops * (_panelHeightOpen - _panelHeightClosed) +
+                    _initFabHeight;
+                print(_fabHeight);
+              }),
+            ),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
             fixedColor: Colors.black,
@@ -213,30 +192,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _panel(ScrollController sc, BuildContext context, var visible) {  // f
-    return Scaffold(
-      backgroundColor: Colors.grey.shade900,
-      body: MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                width: 30,
-                height: 5,
-
-                decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
-              ),
+  Widget _panel(ScrollController sc) {
+    // f
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Container(
+              width: 30,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
             ),
-
           ),
           _fabHeight >= 200
               ? Padding(
