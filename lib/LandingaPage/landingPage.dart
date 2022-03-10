@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:life_app/LandingaPage/addas.dart';
 import 'package:life_app/LandingaPage/friends.dart';
 import 'package:life_app/Models/conversationsImage.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:rive/rive.dart' as rive;
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,6 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   PanelController _panelController = PanelController();
   late Animation animation;
+  late rive.RiveAnimationController _riveAnimationController;
+  late rive.Artboard artboard;
 
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
@@ -44,22 +48,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         name: 'John',
         messageText: 'Hello',
         imageURL: 'assets/group_6898.png',
-        markAs: 'Receiver'),
+        isGroupChat: false,
+        groupImage: null),
     ConversationsImages(
         name: 'Adda Name',
-        messageText: 'WhatsUp! Guys',
+        messageText: 'WhatsUp! Guys...',
         imageURL: 'assets/group_6897.png',
-        markAs: 'Sender'),
+        isGroupChat: true,
+        groupImage: 'assets/group_6898.png'),
     ConversationsImages(
         name: 'Adda Name',
         messageText: 'WhatsUp! Guys',
         imageURL: 'assets/group_6896.png',
-        markAs: 'Receiver'),
+        isGroupChat: true,
+        groupImage: 'assets/group_6582.png'),
     ConversationsImages(
         name: 'Angella',
         messageText: 'Hello',
         imageURL: 'assets/group_6582.png',
-        markAs: 'Sender')
+        isGroupChat: false,
+        groupImage: null)
   ];
 
   @override
@@ -78,12 +86,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _fabHeight = _initFabHeight;
     _tabController =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
+
+    rootBundle.load('assets/bubble animation.riv').then(
+      (data) {
+        final file = rive.RiveFile.import(data);
+        final artboard = file.mainArtboard;
+      },
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     _tabController.dispose();
+    _riveAnimationController.dispose();
   }
 
   @override
@@ -158,8 +174,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: Container(),
                     style: ElevatedButton.styleFrom(
                         shape: CircleBorder(), primary: Colors.amber.shade300
-                      // padding: EdgeInsets.all(24),
-                    ),
+                        // padding: EdgeInsets.all(24),
+                        ),
                   ),
                 ),
                 label: 'Messages',
@@ -195,37 +211,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
             ),
           ),
-          _fabHeight >= 400
+          _fabHeight >= 200
               ? Padding(
-            padding:
-            EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 16),
-            child: SizedBox(
-              height: 45,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search friends ...",
-                  hintStyle: TextStyle(color: Colors.grey.shade600),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey.shade600,
-                    size: 28,
-                  ),
-                  filled: true,
-                  fillColor: Colors.black87,
-                  contentPadding: EdgeInsets.all(8),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
+                  padding:
+                      EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 16),
+                  child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: Duration(seconds: 1, milliseconds: 50),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value as double,
+                        child: child,
+                      );
+                    },
+                    child: SizedBox(
+                      height: 45,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search friends ...",
+                          hintStyle: TextStyle(color: Colors.grey.shade600),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey.shade600,
+                            size: 28,
+                          ),
+                          filled: true,
+                          fillColor: Colors.black87,
+                          contentPadding: EdgeInsets.all(8),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ),
-          )
+                )
               : SizedBox(),
           TabBar(
             tabs: tabs,
@@ -249,10 +275,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       children: [
         Container(
           decoration: BoxDecoration(
-              gradient: RadialGradient(
-                  center: Alignment.topLeft,
-                  colors: [Color(0xff470d3a), Color(0xff410b35), Colors.black],
-                  radius: 0.7)),
+            gradient: RadialGradient(
+                center: Alignment.topLeft,
+                colors: [Color(0xff470d3a), Color(0xff410b35), Colors.black],
+                radius: 0.7),
+          ),
           child: Stack(
             children: [
               Transform(
@@ -273,6 +300,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         blurRadius: 70.0,
                       ),
                     ],
+                  ),
+                ),
+              ),
+              Transform(
+                transform: Matrix4.translationValues(100, 60, 0),
+                child: Container(
+                  width: 500.0,
+                  height: 500.0,
+                  // color: Colors.red,
+                  child: rive.RiveAnimation.asset(
+                    'assets/bubble animation.riv', fit: BoxFit.fitHeight,
+                    // controllers: [_riveAnimationController],
+                    // controllers: [_riveAnimationController.],
+                    animations: ['Animation 1'],
                   ),
                 ),
               ),
@@ -318,41 +359,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    // Transform(
-                    //   transform: Matrix4.translationValues(-50, 0, 0),
-                    //   child: Align(
-                    //     alignment: Alignment.topRight,
-                    //     child: TweenAnimationBuilder(
-                    //         child: ElevatedButton(
-                    //           onPressed: () {},
-                    //           child: Image.asset(
-                    //             'assets/chat_new.png',
-                    //             scale: 1.6,
-                    //           ),
-                    //           style: ElevatedButton.styleFrom(
-                    //               shape: CircleBorder(),
-                    //               padding: EdgeInsets.all(15),
-                    //               primary: Color(0xff77c6ff)),
-                    //         ),
-                    //         tween: Tween<double>(begin: 0, end: 1),
-                    //         duration: Duration(seconds: 4),
-                    //         builder: (context, value, child) {
-                    //           return Opacity(
-                    //             opacity: value as double,
-                    //             child: Padding(
-                    //               padding: EdgeInsets.only(top: value * 10),
-                    //               child: child,
-                    //             ),
-                    //           );
-                    //         }),
-                    //   ),
-                    // ),
                     Expanded(
                       child: Transform(
                         transform: Matrix4.translationValues(
                             0, -(MediaQuery.of(context).size.height / 15), 0),
                         child: AnimationLimiter(
-
                           child: ListView.builder(
                               itemCount: conversationsImages.length,
                               itemBuilder: (context, index) {
@@ -361,23 +372,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   duration: Duration(seconds: 6),
                                   // delay: Duration(milliseconds: 100),
                                   child: SlideAnimation(
-
                                     verticalOffset: 700,
                                     // curve: es.easeOutQuint,
                                     curve: Curves.linearToEaseOut,
                                     // curve: Curves.decelerate,
                                     child: Align(
-                                      alignment:
-                                      (conversationsImages[index].markAs ==
-                                          "Receiver"
+                                      alignment: (index.isEven)
                                           ? Alignment.topLeft
-                                          : Alignment.topRight),
-                                      heightFactor: 0.52,
+                                          : Alignment.topRight,
+                                      heightFactor: 0.50,
                                       child: Column(
                                         children: [
-                                          if(index == 0)
+                                          if (index == 0)
                                             Transform(
-                                              transform: Matrix4.translationValues(180, 50, 10),
+                                              transform:
+                                                  Matrix4.translationValues(
+                                                      180, 50, 10),
                                               child: ElevatedButton(
                                                 onPressed: () {},
                                                 child: Image.asset(
@@ -390,43 +400,95 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     primary: Color(0xff77c6ff)),
                                               ),
                                             ),
-                                          Transform.scale(
-                                              scale: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                                  1300,
-                                              child: Image.asset(
-                                                  conversationsImages[index]
-                                                      .imageURL)),
+                                          Stack(
+                                            children: [
+                                              Transform.scale(
+                                                  scale: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      1300,
+                                                  child: Image.asset(
+                                                      conversationsImages[index]
+                                                          .imageURL)),
+                                              if (conversationsImages[index]
+                                                      .groupImage !=
+                                                  null)
+                                                Transform.scale(
+                                                  scale: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      2300,
+                                                  child: Transform(
+                                                    transform: (index.isOdd)
+                                                        ? Matrix4
+                                                            .translationValues(
+                                                                -140, 20, 0)
+                                                        : Matrix4
+                                                            .translationValues(
+                                                                70, 20, 0),
+                                                    child: Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.21,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 8),
+                                                          shape:
+                                                              BoxShape.circle),
+                                                      child: Image.asset(
+                                                          conversationsImages[
+                                                                  index]
+                                                              .groupImage
+                                                              .toString()),
+                                                    ),
+                                                  ),
+                                                )
+                                            ],
+                                          ),
                                           Transform(
                                             transform:
-                                            Matrix4.translationValues(
-                                                0, -45, 0),
+                                                (conversationsImages[index]
+                                                            .isGroupChat ==
+                                                        true)
+                                                    ? Matrix4.translationValues(
+                                                        0, -60, 0)
+                                                    : Matrix4.translationValues(
+                                                        0, -45, 0),
                                             child: Card(
                                               child: Padding(
                                                 padding:
-                                                const EdgeInsets.all(8.0),
+                                                    const EdgeInsets.all(8.0),
                                                 child: Text(
                                                     conversationsImages[index]
                                                         .messageText,
                                                     style: GoogleFonts.roboto(
                                                       textStyle: TextStyle(
                                                           color: Colors.black,
-                                                          fontSize: 12),
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     )),
                                               ),
                                               color: Colors.white,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      16)),
+                                                      BorderRadius.circular(
+                                                          16)),
                                             ),
                                           ),
-
                                           Transform(
                                             transform:
-                                            Matrix4.translationValues(
-                                                0, -40, 0),
+                                                (conversationsImages[index]
+                                                            .isGroupChat ==
+                                                        true)
+                                                    ? Matrix4.translationValues(
+                                                        0, -46, 0)
+                                                    : Matrix4.translationValues(
+                                                        0, -40, 0),
                                             child: Text(
                                                 conversationsImages[index].name,
                                                 style: GoogleFonts.roboto(
@@ -435,9 +497,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       fontSize: 15),
                                                 )),
                                           ),
-
                                         ],
-
                                       ),
                                     ),
                                   ),
@@ -449,69 +509,76 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    MediaQuery.of(context).size.height / 25,
-                    MediaQuery.of(context).size.height / 3,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 7),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 15,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xff8a8df2)),
-                  ),
-                ),
-              ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    MediaQuery.of(context).size.height / 6,
-                    MediaQuery.of(context).size.height / 2.67,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 7),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 10,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xff77c6ff)),
-                  ),
-                ),
-              ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    MediaQuery.of(context).size.height / 5.4,
-                    MediaQuery.of(context).size.height / 2.59,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 7),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 5,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xffffd46a)),
-                  ),
-                ),
-              ),
+
+              // rive.RiveAnimation.asset(
+              //   'assets/bubble animation.riv',
+              //   // controllers: [_riveAnimationController],
+              //   animations: ['Animation 1'],
+              // ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       MediaQuery.of(context).size.height / 40,
+              //       MediaQuery.of(context).size.height / 3.7,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 7),
+              //     builder: (context, value, child) {
+              //       return
+              //        Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 15,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xff8a8df2)),
+              //     ),
+              //   ),
+              // ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       MediaQuery.of(context).size.height / 7.2,
+              //       MediaQuery.of(context).size.height / 3.0,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 7),
+              //     builder: (context, value, child) {
+              //       return Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 10,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xff77c6ff)),
+              //     ),
+              //   ),
+              // ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       MediaQuery.of(context).size.height / 6.4,
+              //       MediaQuery.of(context).size.height / 2.9,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 7),
+              //     builder: (context, value, child) {
+              //       return Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 5,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xffffd46a)),
+              //     ),
+              //   ),
+              // ),
               Transform(
                 transform: Matrix4.translationValues(
                     -(MediaQuery.of(context).size.height / 20.0),
