@@ -13,7 +13,7 @@ class OutBubble extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(30),
             margin: const EdgeInsets.only(bottom: 5),
             decoration: BoxDecoration(
               color: Colors.grey.shade900,

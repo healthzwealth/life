@@ -350,7 +350,7 @@ class _ReactionEmojiBoxState extends State<ReactionEmojiBox> with TickerProvider
           // Just a top space
           Container(
             width: double.infinity,
-            height: 100.0,
+            height: 50.0,
           ),
 
           // main content
