@@ -440,7 +440,7 @@ class _ChatsPageState extends State<ChatsPage> with TickerProviderStateMixin {
                                                   // padding:
                                                   //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
                                                   child: Transform.scale(
-                                                      scale: 0.5,
+                                                      scale: 1,
                                                       child: Image.asset(
                                                           sticker
                                                               .image)),
@@ -498,7 +498,7 @@ class _ChatsPageState extends State<ChatsPage> with TickerProviderStateMixin {
                        // padding:
                       //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
                         child: Transform.scale(
-                            scale: 0.5,
+                            scale: 1,
                             child: Image.asset(
                                 sticker
                                     .image)),
