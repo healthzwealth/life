@@ -35,6 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_slidable: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,16 @@ flutter:
     - assets/emojione_monotone_game_die.png
     - assets/home_smile.png
     - assets/bubble animation.riv
+    - assets/angry2.png
+    - assets/sad2.png
+    - assets/love2.png
+    - assets/wow2.png
+    - assets/haha2.png
+    - assets/angry.gif
+    - assets/sad.gif
+    - assets/love.gif
+    - assets/wow.gif
+    - assets/haha.gif
     
 
 

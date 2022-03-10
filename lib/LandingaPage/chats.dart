@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_slidable/flutter_slidable.dart';
 class Chats extends StatefulWidget {
   const Chats({Key? key}) : super(key: key);
 
@@ -11,6 +11,10 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
+
+  bool isSelected = false;
+  int indexSelected = 0;
+  int indexPos = 0;
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
@@ -53,6 +57,30 @@ class _ChatsState extends State<Chats> {
         messageCount: 2,
         messageType: "receiver"),
   ];
+
+  
+
+      void toggleSelection() {
+      setState(() {
+        //if (isSelected == false) {
+        isSelected = true;
+        //}
+      // ReactionEmojiBox();
+        //Navigator.of(context).pushNamed(ReactionEmojiBox.routeName);
+        //} 
+      });
+  }
+    void toggleSelectionClose() {
+      setState(() {
+        //if (isSelected == false) {
+        isSelected = false;
+        
+        //}
+      // ReactionEmojiBox();
+        //Navigator.of(context).pushNamed(ReactionEmojiBox.routeName);
+        //} 
+      });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,46 +160,82 @@ class _ChatsState extends State<Chats> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return Container(
-                  padding:
-                      EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                  child: Align(
-                    alignment: (messages[index].messageType == "receiver"
-                        ? Alignment.topLeft
-                        : Alignment.topRight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        // border: RoundedRectangleBorder(),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                            bottomLeft:
-                                messages[index].messageType == "receiver"
-                                    ? Radius.circular(0)
-                                    : Radius.circular(20),
-                            bottomRight:
-                                messages[index].messageType == "receiver"
-                                    ? Radius.circular(20)
-                                    : Radius.circular(0)),
-                        color: (messages[index].messageType == "receiver"
-                            ? Colors.grey[600]
-                            : Colors.grey[900]),
-                      ),
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        messages[index].text,
-                        style: GoogleFonts.roboto(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal)),
-                      ),
-                    ),
+                return  Slidable(
+                  key: const ValueKey(0),
+                  closeOnScroll: true,
+                  
+                  startActionPane: ActionPane(
+                    extentRatio: 1.6/6,
+                    motion: const ScrollMotion(),
+                  
+                    children: const [
+             
+                      SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0x384c74),
+                          foregroundColor: Colors.grey,
+                          icon: Icons.reply_outlined,
+                          spacing: 0,
+                        ),
+                    SlidableAction(
+                          onPressed: null,
+                          backgroundColor: Color(0x384c74),
+                          foregroundColor: Colors.grey,
+                          icon: Icons.face,
+                         
+                        ),
+
+                          ],
                   ),
-                );
+                    child:GestureDetector(
+                      //onLongPress: toggleSelection,
+                      onTap: toggleSelectionClose,
+                      onLongPressStart: (details) => {longPressStart(details, index)},
+                      child: Container(
+                        padding:
+                            EdgeInsets.only(left: 9, right: 14, top: 10, bottom: 10),
+                        child: Align(
+                          alignment: (messages[index].messageType == "receiver"
+                              ? Alignment.topLeft
+                              : Alignment.topRight),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              // border: RoundedRectangleBorder(),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  bottomLeft:
+                                      messages[index].messageType == "receiver"
+                                          ? Radius.circular(0)
+                                          : Radius.circular(20),
+                                  bottomRight:
+                                      messages[index].messageType == "receiver"
+                                          ? Radius.circular(20)
+                                          : Radius.circular(0)),
+                              color: (messages[index].messageType == "receiver"
+                                  ? Colors.grey[600]
+                                  : Colors.grey[900]),
+                            ),
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                              messages[index].text,
+                              style: GoogleFonts.roboto(
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                          ),
+                          
+                        ),
+                      ),
+                      
+                      ),);
               },
             ),
+            
           ),
+                 
           Container(
             // padding: EdgeInsets.symmetric(horizontal: 8),
             height: 70,
@@ -226,55 +290,148 @@ class _ChatsState extends State<Chats> {
                       ),
                     ),
                   ),
-                )
+                ),
+                (isSelected == true)?      
+                      getReaction()
+                      :Container(), 
               ],
             ),
           ),
-          // Container(
-          //   height: 80,
-          //   decoration: BoxDecoration(
-          //     color: Colors.grey[900],
-          //   ),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Transform(
-          //         transform: Matrix4.translationValues(0, -13, 0),
-          //         child: InkWell(
-          //           child: IconButton(
-          //             icon: Icon(
-          //               Icons.photo_camera,
-          //               color: Colors.grey[800],
-          //             ),
-          //             onPressed: () {},
-          //           ),
-          //         ),
-          //       ),
-          //       Transform(
-          //         transform: Matrix4.translationValues(0, -13, 0),
-          //         child: InkWell(
-          //           child: IconButton(
-          //             icon: Icon(
-          //               Icons.keyboard_voice,
-          //               color: Colors.grey[800],
-          //             ),
-          //             onPressed: () {},
-          //           ),
-          //         ),
-          //       ),
-          //       Padding(
-          //         padding: const EdgeInsets.only(left: 15),
-          //         child: TextField(
-          //           decoration: InputDecoration(
-          //               fillColor: Colors.grey[350],
-          //               hintText: "message",
-          //               border: InputBorder.none),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          
         ]),
       ),
     );
+  }
+
+  getReaction() {
+    return Transform(
+        transform: Matrix4.translationValues((-180.0+(messages[indexPos].text).length), -550.0+(62*indexPos), 5),
+        
+        child: Padding(
+                     padding: const EdgeInsets.only(bottom:25),
+                     child: Container(
+                        height:30,
+                        width:150,
+             
+                       child:Container(
+                                                              height: 28,
+                                                                 width: 50,
+                                                                    decoration: BoxDecoration(
+                                                                         color: Colors.grey[900],
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                10)),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceEvenly,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              28,
+                                                                          width:
+                                                                              25,
+                                                                                color: Colors.grey[900],
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              setState(() {    
+                                                                                
+                                                                              });
+                                                                            },
+                                                                            child:
+                                                                                Transform(
+                                                                              transform: Matrix4.translationValues(
+                                                                                  -3,
+                                                                                  0,
+                                                                                  0),
+                                                                              child:
+                                                                                  Image.asset("assets/wow.gif"),
+                                                                            ),
+                                                                          ),
+                                                                        ),                                                                      Container(
+                                                                                                                                                                 width: 25,
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                          
+                                                                              setState(() {
+                                                                          
+                                                                              });
+                                                                            },
+                                                                            child:
+                                                                                Transform(
+                                                                              transform: Matrix4.translationValues(
+                                                                                  -3,
+                                                                                  0,
+                                                                                  1),
+                                                                              child:
+                                                                                  Image.asset("assets/love.gif"),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                            height: 28,
+                                                                                              width: 25,
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              setState(() {
+                                                                                
+                                                                              });
+                                                                            },
+                                                                            child:
+                                                                                Transform(
+                                                                              transform: Matrix4.translationValues(
+                                                                                  -2,
+                                                                                  0,
+                                                                                  1),
+                                                                              child:
+                                                                                  Image.asset("assets/haha.gif"),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                             height: 28,
+                                                                                              width: 25,
+                                                                          decoration: BoxDecoration(
+                                                                              color:
+                                                                                    Colors.grey[900],
+                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                            
+                                                                            },
+                                                                            child:
+                                                                                Transform(
+                                                                              transform: Matrix4.translationValues(
+                                                                                  -6,
+                                                                                  0,
+                                                                                  3),
+                                                                              child:
+                                                                                  Image.asset('assets/angry.gif'),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                           
+                                                                      ],
+                                                                    ),
+                                                                  )
+                      ),
+                   ));
+  }
+
+  longPressStart(LongPressStartDetails details, int index) {
+    setState(() {
+      isSelected= true;
+      indexPos = index;
+      print(indexPos);  
+    });
+    
   }
 }
