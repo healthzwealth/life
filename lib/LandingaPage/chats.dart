@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:life_app/Models/StickersModel.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,7 +11,38 @@ class Chats extends StatefulWidget {
   _ChatsState createState() => _ChatsState();
 }
 
-class _ChatsState extends State<Chats> {
+class _ChatsState extends State<Chats> with TickerProviderStateMixin{
+  bool _visible = false;
+  var count = 0;
+  bool pressAttention = true;
+  TabController? _tabController;
+  void initState(){
+    setState(() {
+      _visible = false;
+      _tabController =
+          TabController(length: tabs.length, vsync: this, initialIndex: 0);
+    });
+  }
+
+  List<Tab> tabs = [
+    Tab(
+      text: 'Memotion',
+    ),
+    Tab(
+      text: 'Sticker',
+    ),
+    Tab(
+      text: 'Gif',
+    ),
+    Tab(
+      text: 'emoji',
+    )
+  ];
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController!.dispose();
+  }
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
@@ -53,8 +85,28 @@ class _ChatsState extends State<Chats> {
         messageCount: 2,
         messageType: "receiver"),
   ];
+  List<StickersModel> stickers = [
+    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+  ];
   @override
   Widget build(BuildContext context) {
+    const double _kKeyboardHeight = 350;
+    final double rows = 2;
+    final double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final int colorsCount = stickers.length;
+    final int colorsPerRow = (colorsCount / rows).ceil();
+    final double itemWidth = screenWidth / colorsPerRow;
+    final double itemHeight = _kKeyboardHeight / 3;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -204,12 +256,39 @@ class _ChatsState extends State<Chats> {
                         filled: true,
                         hintText: 'message',
                         contentPadding: EdgeInsets.only(top: 10, left: 10),
-                        suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.emoji_emotions_outlined,
-                              color: Colors.grey.shade600,
-                            )),
+                        // suffixIcon:  IconButton(
+                        //   icon: Icon(Icons.emoji_emotions_sharp,
+                        //     color: pressAttention ? Colors.white : Colors.yellow,
+                        //     // color: Colors.grey
+                        //   ),
+                        //   onPressed: () {
+                        //     if (count == 0) {
+                        //       print("Im here");
+                        //       setState(() {
+                        //         count++;
+                        //         _visible = true;
+                        //         pressAttention=false;
+                        //       });
+                        //       print(_visible);
+                        //       print(count);
+                        //     }
+                        //     else if (count >= 0) {
+                        //       print("Im else");
+                        //       setState(() {
+                        //         count--;
+                        //         _visible = false;
+                        //         pressAttention=true;
+                        //       });
+                        //
+                        //     }
+                        //
+                        //     // Navigator.of(context).push(PageRouteBuilder(
+                        //     //     pageBuilder:(context,animation,_) {
+                        //     //       return StickerKeyboard();
+                        //     //
+                        //     //     },opaque: false));
+                        //   },
+                        // ),
                         hintStyle: TextStyle(
                             color: Colors.grey.shade400,
                             fontWeight: FontWeight.bold),
@@ -226,7 +305,44 @@ class _ChatsState extends State<Chats> {
                       ),
                     ),
                   ),
-                )
+                ),
+                //       Transform(
+                //         transform: Matrix4.translationValues(0, -13, 0),
+                Transform(transform: Matrix4.translationValues(-40, 0, 0),
+                  child: IconButton(
+                    icon: Icon(Icons.emoji_emotions_sharp,
+                      color: pressAttention ? Colors.white : Colors.yellow,
+                      // color: Colors.grey
+                    ),
+                    onPressed: () {
+                      if (count == 0) {
+                        print("Im here");
+                        setState(() {
+                          count++;
+                          _visible = true;
+                          pressAttention=false;
+                        });
+                        print(_visible);
+                        print(count);
+                      }
+                      else if (count >= 0) {
+                        print("Im else");
+                        setState(() {
+                          count--;
+                          _visible = false;
+                          pressAttention=true;
+                        });
+
+                      }
+
+                      // Navigator.of(context).push(PageRouteBuilder(
+                      //     pageBuilder:(context,animation,_) {
+                      //       return StickerKeyboard();
+                      //
+                      //     },opaque: false));
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -273,6 +389,80 @@ class _ChatsState extends State<Chats> {
           //     ],
           //   ),
           // ),
+          _visible == false ? Container() :
+          Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: Container(
+              height: _kKeyboardHeight,
+              color: Colors.black,
+              child: Wrap(
+                children: <Widget>[
+                  //  Text("Im here"),
+                  TabBar(
+                    tabs: tabs,
+                    controller: _tabController,
+                    indicatorColor: Colors.transparent,
+                    labelColor: Color(0xfff5d977),
+                    unselectedLabelColor: Color(0xff666666),
+                    labelStyle: GoogleFonts.roboto(textStyle: TextStyle(fontSize: 14)),
+                  ),
+                  SizedBox(
+                    height: 300.0,
+                    child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          Container(child: Text("")),
+                          ListView.builder(
+                            itemCount:stickers.length,
+                             shrinkWrap: true,
+                            padding: EdgeInsets.only(top: 0, bottom: 0),
+                            //  physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return          Container(
+                                height: _kKeyboardHeight,
+                                child: Wrap(
+                                  children: <Widget>[
+                                    for (final sticker in stickers)
+                                      GestureDetector(
+                                        onTap: () {
+                                          // updateValue(color);
+                                        },
+                                        child: Container(
+                                          width: itemWidth,
+                                          height: itemHeight,
+                                          // padding:
+                                          //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
+                                          child: Transform.scale(
+                                              scale: 1,
+                                              child: Image.asset(
+                                                  sticker
+                                                      .image)),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              );
+                            },
+                          ) ,
+                          Container(child: Text("")),
+                          Container(child: Text("")
+                          )]),
+                  ),
+                  // for (final color in Colors.primaries)
+                  //   GestureDetector(
+                  //     onTap: () {
+                  //       //  updateValue(color);
+                  //     },
+                  //     child: Container(
+                  //       color: color,
+                  //       width: itemWidth,
+                  //       height: itemHeight,
+                  //     ),
+                  //   )
+                ],
+              ),
+            ),
+          ),
         ]),
       ),
     );
