@@ -2,10 +2,12 @@ class ConversationsImages {
   late String name;
   late String messageText;
   late String imageURL;
-  late String markAs;
+  late bool isGroupChat;
+  late String? groupImage;
   ConversationsImages(
       {required this.name,
       required this.messageText,
       required this.imageURL,
-      required this.markAs});
+      required this.isGroupChat,
+      this.groupImage});
 }
