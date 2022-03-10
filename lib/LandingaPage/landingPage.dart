@@ -318,35 +318,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    // Transform(
-                    //   transform: Matrix4.translationValues(-50, 0, 0),
-                    //   child: Align(
-                    //     alignment: Alignment.topRight,
-                    //     child: TweenAnimationBuilder(
-                    //         child: ElevatedButton(
-                    //           onPressed: () {},
-                    //           child: Image.asset(
-                    //             'assets/chat_new.png',
-                    //             scale: 1.6,
-                    //           ),
-                    //           style: ElevatedButton.styleFrom(
-                    //               shape: CircleBorder(),
-                    //               padding: EdgeInsets.all(15),
-                    //               primary: Color(0xff77c6ff)),
-                    //         ),
-                    //         tween: Tween<double>(begin: 0, end: 1),
-                    //         duration: Duration(seconds: 4),
-                    //         builder: (context, value, child) {
-                    //           return Opacity(
-                    //             opacity: value as double,
-                    //             child: Padding(
-                    //               padding: EdgeInsets.only(top: value * 10),
-                    //               child: child,
-                    //             ),
-                    //           );
-                    //         }),
-                    //   ),
-                    // ),
+                   
                     Expanded(
                       child: Transform(
                         transform: Matrix4.translationValues(
