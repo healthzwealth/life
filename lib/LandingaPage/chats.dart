@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:life_app/Models/StickersModel.dart';
+import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
+
+import 'package:life_app/providers/uploadDiagImageProvider.dart';
+import 'package:provider/provider.dart';
 
 class Chats extends StatefulWidget {
   const Chats({Key? key}) : super(key: key);
@@ -11,16 +17,58 @@ class Chats extends StatefulWidget {
   _ChatsState createState() => _ChatsState();
 }
 
-class _ChatsState extends State<Chats> with TickerProviderStateMixin{
+class _ChatsState extends State<Chats> with TickerProviderStateMixin {
+  bool awsFlag = true;
+  late File imageFile = File('your initial file');
+
+  final picker = ImagePicker();
+
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? selectedImage;
   bool _visible = false;
   var count = 0;
   bool pressAttention = true;
   TabController? _tabController;
-  void initState(){
+  void initState() {
+    getImages();
     setState(() {
       _visible = false;
       _tabController =
           TabController(length: tabs.length, vsync: this, initialIndex: 0);
+    });
+  }
+
+  List awsImageList = [];
+
+  void setMemberData(List awsImageList) {
+    for (int i = 0; i < awsImageList.length; i++) {
+      messages.add(FriendsModel(
+          name: 'Ramanujan',
+          text: '',
+          date: 'today',
+          imageURL:
+              "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+          messageCount: 2,
+          messageType: "sender",
+          image: true,
+          imageS3: awsImageList[i].imageS3));
+    }
+  }
+
+  getImages() async {
+    awsFlag = false;
+    UploadImageProvider downloadIamgeProvider =
+        Provider.of<UploadImageProvider>(context, listen: false);
+    setState(() {});
+    print('______________________________');
+    await downloadIamgeProvider.getAllImages().then((values) {
+      setState(() {
+        awsImageList = values;
+        if (awsImageList.length > 0) {
+          setMemberData(awsImageList);
+        }
+      });
     });
   }
 
@@ -43,6 +91,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
     super.dispose();
     _tabController!.dispose();
   }
+
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
@@ -51,7 +100,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hello!',
@@ -59,7 +110,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "receiver"),
+        messageType: "receiver",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Happy Birthday!',
@@ -67,7 +120,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Thank you!',
@@ -75,7 +130,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "receiver"),
+        messageType: "receiver",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
@@ -83,26 +140,62 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "receiver"),
+        messageType: "receiver",
+        image: false,
+        imageS3: null),
   ];
   List<StickersModel> stickers = [
-    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
-    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
   ];
   @override
   Widget build(BuildContext context) {
+    postDiagUploadImageS3(uploadImageModel) async {
+      UploadImageProvider upload =
+          Provider.of<UploadImageProvider>(context, listen: false);
+      await upload.postDiagUploadImageS3(uploadImageModel).then(
+            (value) {},
+          );
+    }
+
+    void setUploadImageModel() {
+      if (selectedImage != null) {
+        UploadImageModel uploadImageModel = new UploadImageModel();
+        final File imageFile = File(selectedImage!.path);
+        print(imageFile);
+        uploadImageModel.imageFile = imageFile;
+        uploadImageModel.fileNameS3 =
+            "LifeApp_ ${DateTime.now().toLocal()}.jpg";
+
+        postDiagUploadImageS3(uploadImageModel);
+      } else {}
+    }
+
+    openGallery(BuildContext context) async {
+      selectedImage = await _picker.pickImage(
+          source: ImageSource.gallery, imageQuality: 30);
+      this.setState(() {
+        setUploadImageModel();
+      });
+    }
+
     const double _kKeyboardHeight = 350;
     final double rows = 2;
-    final double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double screenWidth = MediaQuery.of(context).size.width;
     final int colorsCount = stickers.length;
     final int colorsPerRow = (colorsCount / rows).ceil();
     final double itemWidth = screenWidth / colorsPerRow;
@@ -209,15 +302,24 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                             ? Colors.grey[600]
                             : Colors.grey[900]),
                       ),
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        messages[index].text,
-                        style: GoogleFonts.roboto(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal)),
-                      ),
+                      padding: messages[index].image == false
+                          ? EdgeInsets.all(16)
+                          : EdgeInsets.all(0),
+                      child: messages[index].image == false
+                          ? Text(
+                              messages[index].text,
+                              style: GoogleFonts.roboto(
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal)),
+                            )
+                          : Image.memory(
+                              messages[index].imageS3!,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.fill,
+                            ),
                     ),
                   ),
                 );
@@ -233,7 +335,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    openGallery(context);
+                  },
                   icon: Icon(
                     Icons.photo_camera,
                     color: Colors.grey[800],
@@ -308,9 +412,11 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                 ),
                 //       Transform(
                 //         transform: Matrix4.translationValues(0, -13, 0),
-                Transform(transform: Matrix4.translationValues(-40, 0, 0),
+                Transform(
+                  transform: Matrix4.translationValues(-40, 0, 0),
                   child: IconButton(
-                    icon: Icon(Icons.emoji_emotions_sharp,
+                    icon: Icon(
+                      Icons.emoji_emotions_sharp,
                       color: pressAttention ? Colors.white : Colors.yellow,
                       // color: Colors.grey
                     ),
@@ -320,19 +426,17 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                         setState(() {
                           count++;
                           _visible = true;
-                          pressAttention=false;
+                          pressAttention = false;
                         });
                         print(_visible);
                         print(count);
-                      }
-                      else if (count >= 0) {
+                      } else if (count >= 0) {
                         print("Im else");
                         setState(() {
                           count--;
                           _visible = false;
-                          pressAttention=true;
+                          pressAttention = true;
                         });
-
                       }
 
                       // Navigator.of(context).push(PageRouteBuilder(
@@ -389,80 +493,80 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
           //     ],
           //   ),
           // ),
-          _visible == false ? Container() :
-          Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Container(
-              height: _kKeyboardHeight,
-              color: Colors.black,
-              child: Wrap(
-                children: <Widget>[
-                  //  Text("Im here"),
-                  TabBar(
-                    tabs: tabs,
-                    controller: _tabController,
-                    indicatorColor: Colors.transparent,
-                    labelColor: Color(0xfff5d977),
-                    unselectedLabelColor: Color(0xff666666),
-                    labelStyle: GoogleFonts.roboto(textStyle: TextStyle(fontSize: 14)),
+          _visible == false
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Container(
+                    height: _kKeyboardHeight,
+                    color: Colors.black,
+                    child: Wrap(
+                      children: <Widget>[
+                        //  Text("Im here"),
+                        TabBar(
+                          tabs: tabs,
+                          controller: _tabController,
+                          indicatorColor: Colors.transparent,
+                          labelColor: Color(0xfff5d977),
+                          unselectedLabelColor: Color(0xff666666),
+                          labelStyle: GoogleFonts.roboto(
+                              textStyle: TextStyle(fontSize: 14)),
+                        ),
+                        SizedBox(
+                          height: 300.0,
+                          child:
+                              TabBarView(controller: _tabController, children: [
+                            Container(child: Text("")),
+                            ListView.builder(
+                              itemCount: stickers.length,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.only(top: 0, bottom: 0),
+                              //  physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  height: _kKeyboardHeight,
+                                  child: Wrap(
+                                    children: <Widget>[
+                                      for (final sticker in stickers)
+                                        GestureDetector(
+                                          onTap: () {
+                                            // updateValue(color);
+                                          },
+                                          child: Container(
+                                            width: itemWidth,
+                                            height: itemHeight,
+                                            // padding:
+                                            //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
+                                            child: Transform.scale(
+                                                scale: 1,
+                                                child:
+                                                    Image.asset(sticker.image)),
+                                          ),
+                                        )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            Container(child: Text("")),
+                            Container(child: Text(""))
+                          ]),
+                        ),
+                        // for (final color in Colors.primaries)
+                        //   GestureDetector(
+                        //     onTap: () {
+                        //       //  updateValue(color);
+                        //     },
+                        //     child: Container(
+                        //       color: color,
+                        //       width: itemWidth,
+                        //       height: itemHeight,
+                        //     ),
+                        //   )
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: 300.0,
-                    child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          Container(child: Text("")),
-                          ListView.builder(
-                            itemCount:stickers.length,
-                             shrinkWrap: true,
-                            padding: EdgeInsets.only(top: 0, bottom: 0),
-                            //  physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return          Container(
-                                height: _kKeyboardHeight,
-                                child: Wrap(
-                                  children: <Widget>[
-                                    for (final sticker in stickers)
-                                      GestureDetector(
-                                        onTap: () {
-                                          // updateValue(color);
-                                        },
-                                        child: Container(
-                                          width: itemWidth,
-                                          height: itemHeight,
-                                          // padding:
-                                          //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
-                                          child: Transform.scale(
-                                              scale: 1,
-                                              child: Image.asset(
-                                                  sticker
-                                                      .image)),
-                                        ),
-                                      )
-                                  ],
-                                ),
-                              );
-                            },
-                          ) ,
-                          Container(child: Text("")),
-                          Container(child: Text("")
-                          )]),
-                  ),
-                  // for (final color in Colors.primaries)
-                  //   GestureDetector(
-                  //     onTap: () {
-                  //       //  updateValue(color);
-                  //     },
-                  //     child: Container(
-                  //       color: color,
-                  //       width: itemWidth,
-                  //       height: itemHeight,
-                  //     ),
-                  //   )
-                ],
-              ),
-            ),
-          ),
+                ),
         ]),
       ),
     );
