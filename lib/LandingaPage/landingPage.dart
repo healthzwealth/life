@@ -316,6 +316,67 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     animations: ['Animation 1'],
                   ),
                 ),
+              ),TweenAnimationBuilder(
+                tween: Tween<double>(begin: 2, end: 20),
+                duration: Duration(seconds: 18),
+                curve: Curves.decelerate,
+                builder: (context, value, child) => Transform(
+                  transform: Matrix4.translationValues(
+                      -(MediaQuery.of(context).size.height / (value as double)),
+                      MediaQuery.of(context).size.height / 2.45,
+                      0),
+                  child: Container(
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (value <= 12)
+                            ? Colors.transparent
+                            : Color(0xff74dfce)),
+                  ),
+                ),
+              ),
+
+
+
+              TweenAnimationBuilder(
+                duration: Duration(seconds: 10),
+                tween: Tween<double>(begin: 9, end: 5.9),
+                builder: (context, value, child) => Transform(
+                  transform: Matrix4.translationValues(
+                      -(MediaQuery.of(context).size.height / (value as double)),
+                      MediaQuery.of(context).size.height / 2.05,
+                      0),
+                  child: Container(
+                    height: 10,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (value >= 7)
+                            ? Colors.transparent
+                            : Color(0xff77c6ff)),
+                  ),
+                ),
+              ),
+
+
+
+              TweenAnimationBuilder(
+                duration: Duration(seconds: 13),
+                curve: Curves.decelerate,
+                tween: Tween<double>(begin: 7.0, end: 5.4),
+                builder: (context, value, child) => Transform(
+                  transform: Matrix4.translationValues(
+                      -(MediaQuery.of(context).size.height / (value as double)),
+                      MediaQuery.of(context).size.height / 1.97,
+                      0),
+                  child: Container(
+                    height: 5,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (value >= 5.8)
+                            ? Colors.transparent
+                            : Color(0xffffd46a)),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35),
@@ -579,69 +640,69 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               //     ),
               //   ),
               // ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    -(MediaQuery.of(context).size.height / 20.0),
-                    MediaQuery.of(context).size.height / 2.45,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 7),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 15,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xff74dfce)),
-                  ),
-                ),
-              ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    -(MediaQuery.of(context).size.height / 5.9),
-                    MediaQuery.of(context).size.height / 2.05,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 5),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 10,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xff77c6ff)),
-                  ),
-                ),
-              ),
-              Transform(
-                transform: Matrix4.translationValues(
-                    -(MediaQuery.of(context).size.height / 5.4),
-                    MediaQuery.of(context).size.height / 1.97,
-                    0),
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(seconds: 5),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value as double,
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    height: 5,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Color(0xffffd46a)),
-                  ),
-                ),
-              ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       -(MediaQuery.of(context).size.height / 20.0),
+              //       MediaQuery.of(context).size.height / 2.45,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 7),
+              //     builder: (context, value, child) {
+              //       return Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 15,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xff74dfce)),
+              //     ),
+              //   ),
+              // ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       -(MediaQuery.of(context).size.height / 5.9),
+              //       MediaQuery.of(context).size.height / 2.05,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 5),
+              //     builder: (context, value, child) {
+              //       return Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 10,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xff77c6ff)),
+              //     ),
+              //   ),
+              // ),
+              // Transform(
+              //   transform: Matrix4.translationValues(
+              //       -(MediaQuery.of(context).size.height / 5.4),
+              //       MediaQuery.of(context).size.height / 1.97,
+              //       0),
+              //   child: TweenAnimationBuilder(
+              //     tween: Tween<double>(begin: 0, end: 1),
+              //     duration: Duration(seconds: 5),
+              //     builder: (context, value, child) {
+              //       return Opacity(
+              //         opacity: value as double,
+              //         child: child,
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 5,
+              //       decoration: BoxDecoration(
+              //           shape: BoxShape.circle, color: Color(0xffffd46a)),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
