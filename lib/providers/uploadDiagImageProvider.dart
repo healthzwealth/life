@@ -17,7 +17,7 @@ class UploadImageProvider with ChangeNotifier {
       'us-east-1:fd6b7435-a230-49fa-9ead-fb156204b720',
       AWSRegions.usEast1,
       debugLog: true,
-      s3FolderPath: "public/uploads/1/987654/diag",
+      s3FolderPath: "public/uploads/1/life/diag",
       accessControl: S3AccessControl.publicRead,
       fileName: uploadImageModel.fileNameS3,
     );
@@ -39,7 +39,7 @@ class UploadImageProvider with ChangeNotifier {
       print("Inside try");
       print(DateTime.now().toIso8601String());
       final listBucketResult = await s3client.listObjects(
-          prefix: "public/uploads/1/987654/diag/", delimiter: "/");
+          prefix: "public/uploads/1/life/diag/", delimiter: "/");
       if (listBucketResult != null) {
         final extractedData = listBucketResult.contents!.toList();
         print(extractedData);
