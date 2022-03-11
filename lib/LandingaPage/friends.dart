@@ -14,44 +14,54 @@ class _FriendsState extends State<Friends> {
   List<FriendsModel> friends = [
     FriendsModel(
         name: 'Ramanujan',
-        text: 'tell me about you',
+        text: 'Hi!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
-    FriendsModel(
-        name: 'Reshma',
-        text: 'how are you ?',
-        date: 'today',
-        imageURL:
-            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
-        messageCount: 2,
-        messageType: "sender"),
-    FriendsModel(
-        name: 'Maddy',
-        text: 'lol',
-        date: 'today',
-        imageURL:
-            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
-        messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        selectedIcons: "",
+        reactionPanel: "all"),
     FriendsModel(
         name: 'Ramanujan',
-        text: 'ttyl',
+        text: 'Hello!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "receiver",
+        selectedIcons: "",
+        reactionPanel: "all"),
     FriendsModel(
         name: 'Ramanujan',
-        text: 'hey !',
+        text: 'Happy Birthday!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        selectedIcons: "",
+        reactionPanel: "all"),
+    FriendsModel(
+        name: 'Ramanujan',
+        text: 'Thank you!',
+        date: 'today',
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        messageCount: 2,
+        messageType: "receiver",
+        selectedIcons: "",
+        reactionPanel: "all"),
+    FriendsModel(
+        name: 'Ramanujan',
+        text: 'Glad you remembered.',
+        date: 'today',
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        messageCount: 2,
+        messageType: "receiver",
+        selectedIcons: "",
+        reactionPanel: "all"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -69,8 +79,8 @@ class _FriendsState extends State<Friends> {
 
             Navigator.of(context).push(PageRouteBuilder(
               pageBuilder:(context,animation,_) {
-              return Chats();
-
+              //return Chats();
+                return Chats();
               },opaque: false));
             },
             child: Container(
