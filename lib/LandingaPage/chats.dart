@@ -15,7 +15,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
   bool _visible = false;
   var count = 0;
   bool pressAttention = true;
+  late String text;
   TabController? _tabController;
+  final fieldText = TextEditingController();
   void initState(){
     setState(() {
       _visible = false;
@@ -32,7 +34,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
       text: 'Sticker',
     ),
     Tab(
-      text: 'Gif',
+      text: 'GIF',
     ),
     Tab(
       text: 'emoji',
@@ -42,6 +44,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
   void dispose() {
     super.dispose();
     _tabController!.dispose();
+  }
+  void clearText() {
+    fieldText.clear();
   }
   List<FriendsModel> messages = [
     FriendsModel(
@@ -85,6 +90,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
         messageCount: 2,
         messageType: "receiver"),
   ];
+  List< FriendsModel>  friendsModels=[];
   List<StickersModel> stickers = [
     StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
     StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
@@ -182,9 +188,41 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
               itemCount: messages.length,
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 10, bottom: 10),
-              physics: NeverScrollableScrollPhysics(),
+            //  physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return Container(
+                return messages[index].name=='image' ? Container(
+                  padding:
+                  EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                  child: Align(
+                    alignment: (messages[index].messageType == "receiver"
+                        ? Alignment.topLeft
+                        : Alignment.topRight),
+                    child: Container(
+                      // decoration: BoxDecoration(
+                      //   // border: RoundedRectangleBorder(),
+                      //   borderRadius: BorderRadius.only(
+                      //       topRight: Radius.circular(20),
+                      //       topLeft: Radius.circular(20),
+                      //       bottomLeft:
+                      //       messages[index].messageType == "receiver"
+                      //           ? Radius.circular(0)
+                      //           : Radius.circular(20),
+                      //       bottomRight:
+                      //       messages[index].messageType == "receiver"
+                      //           ? Radius.circular(20)
+                      //           : Radius.circular(0)),
+                      //   color: (messages[index].messageType == "receiver"
+                      //       ? Colors.grey[600]
+                      //       : Colors.grey[900]),
+                      // ),
+                      padding: EdgeInsets.all(16),
+                     child: Transform.scale(
+                        scale: 1,
+                        child: Image.asset(
+                            messages[index].imageURL))
+                    ),
+                  ),
+                ): Container(
                   padding:
                       EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
                   child: Align(
@@ -249,13 +287,59 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                 Expanded(
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 0, top: 15, bottom: 15),
-                    child: TextField(
+                        const EdgeInsets.only(left: 0, top: 15, bottom: 15,),
+                    child: TextField(onChanged: (value) {
+                                  text = value.toString();
+                    },
+                      controller: fieldText,
+                      style: TextStyle(color: Colors.white),
+                      onTap: () {
+                                        if (count == 1) {
+                                                      setState(() {
+                                                            count=1;
+                                                            _visible = false;
+                                                            pressAttention=false;
+                                                        });
+                                                      print(_visible);
+                                                      print(count);
+                                        }
+
+                                 },
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade900,
                         filled: true,
                         hintText: 'message',
                         contentPadding: EdgeInsets.only(top: 10, left: 10),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              print('clicked');
+                              print(messages.length);
+                             // textMessages.add(text.toString());
+                              clearText();
+                              setState(() {
+                                friendsModels.addAll(messages);
+                                messages.removeRange(0, messages.length);
+                                friendsModels.add(FriendsModel(
+                                    name: 'text',
+                                    text: text.toString(),
+                                    date: 'today',
+                                    imageURL: '',
+                                    messageCount: 2,
+                                    messageType: "sender"
+                                ));
+                              });
+                              //   print(friendsModels[index].imageURL);
+                              messages.addAll(friendsModels);
+                              friendsModels.removeRange(0, friendsModels.length);
+                            },
+
+                            icon: Icon(
+
+                              Icons.send,
+
+                              color: Colors.grey.shade600,
+
+                            )),
                         // suffixIcon:  IconButton(
                         //   icon: Icon(Icons.emoji_emotions_sharp,
                         //     color: pressAttention ? Colors.white : Colors.yellow,
@@ -308,7 +392,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                 ),
                 //       Transform(
                 //         transform: Matrix4.translationValues(0, -13, 0),
-                Transform(transform: Matrix4.translationValues(-40, 0, 0),
+                Transform(transform: Matrix4.translationValues(0, 0, 0),
                   child: IconButton(
                     icon: Icon(Icons.emoji_emotions_sharp,
                       color: pressAttention ? Colors.white : Colors.yellow,
@@ -318,7 +402,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                       if (count == 0) {
                         print("Im here");
                         setState(() {
-                          count++;
+                          count=1;
                           _visible = true;
                           pressAttention=false;
                         });
@@ -328,7 +412,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                       else if (count >= 0) {
                         print("Im else");
                         setState(() {
-                          count--;
+                          count=0;
                           _visible = false;
                           pressAttention=true;
                         });
@@ -425,7 +509,21 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin{
                                     for (final sticker in stickers)
                                       GestureDetector(
                                         onTap: () {
-                                          // updateValue(color);
+                                          setState(() {
+                                            friendsModels.addAll(messages);
+                                            messages.removeRange(0, messages.length);
+                                            friendsModels.add(FriendsModel(
+                                                name: 'image',
+                                                text: 'Hi!',
+                                                date: 'today',
+                                                imageURL: sticker.image,
+                                                messageCount: 2,
+                                                messageType: "sender"
+                                            ));
+                                          });
+                                       //   print(friendsModels[index].imageURL);
+                                          messages.addAll(friendsModels);
+                                          friendsModels.removeRange(0, friendsModels.length);
                                         },
                                         child: Container(
                                           width: itemWidth,
