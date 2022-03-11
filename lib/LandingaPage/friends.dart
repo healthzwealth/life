@@ -19,7 +19,9 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Reshma',
         text: 'how are you ?',
@@ -27,7 +29,9 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Maddy',
         text: 'lol',
@@ -35,7 +39,9 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'ttyl',
@@ -43,7 +49,9 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'hey !',
@@ -51,7 +59,9 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "sender"),
+        messageType: "sender",
+        image: false,
+        imageS3: null),
   ];
   @override
   Widget build(BuildContext context) {
@@ -67,11 +77,11 @@ class _FriendsState extends State<Friends> {
               //       builder: (context) => Chats(),
               //     ));
 
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder:(context,animation,_) {
-              return Chats();
-
-              },opaque: false));
+              Navigator.of(context).push(PageRouteBuilder(
+                  pageBuilder: (context, animation, _) {
+                    return Chats();
+                  },
+                  opaque: false));
             },
             child: Container(
               padding:
