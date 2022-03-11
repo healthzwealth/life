@@ -420,9 +420,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                       onTap: () {
                                         if (count == 1) {
                                                       setState(() {
-                                                            count=1;
+                                                            count=0;
                                                             _visible = false;
-                                                            pressAttention=false;
+                                                            pressAttention=true;
                                                         });
                                                       print(_visible);
                                                       print(count);
@@ -526,9 +526,10 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                       // color: Colors.grey
                     ),
                     onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
                       if (count == 0) {
-                        print("Im here");
                         setState(() {
+                          FocusScope.of(context).requestFocus(FocusNode());
                           count=1;
                           _visible = true;
                           pressAttention = false;
@@ -536,7 +537,6 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                         print(_visible);
                         print(count);
                       } else if (count >= 0) {
-                        print("Im else");
                         setState(() {
                           count=0;
                           _visible = false;
