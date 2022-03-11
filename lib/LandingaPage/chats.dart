@@ -11,6 +11,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:life_app/providers/uploadDiagImageProvider.dart';
 import 'package:provider/provider.dart';
 
+
 class Chats extends StatefulWidget {
   const Chats({Key? key}) : super(key: key);
 
@@ -677,4 +678,49 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
       ),
       ) );
   }
+}
+
+
+class ChatsCopy extends StatefulWidget {
+  const ChatsCopy({Key? key}) : super(key: key);
+
+  @override
+  _ChatsCopyState createState() => _ChatsCopyState();
+}
+class _ChatsCopyState extends State<ChatsCopy> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: LayoutBuilder(builder: (context, constraints) {
+          return Container(
+                  child: TweenAnimationBuilder(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: Duration(milliseconds: 1300),
+                  child: Chats(),
+                      builder: (context, value, child) {
+                               return ShaderMask(
+
+                                      blendMode: BlendMode.modulate,
+                                      shaderCallback: (rect) {return RadialGradient(
+                                      radius:  (value != null ? (value as double) * 5 : 5.00),
+                                      colors: [  Colors.white,   Colors.white,    Colors.transparent,    Colors.transparent   ],
+                                      stops: [1.0, 0.65, 0.5, 0.0],
+                                      center: FractionalOffset(0.0, 0.65))
+                                          .createShader(rect);
+                                      },
+                                      child: child,
+                               );
+                               },
+                  ),
+          );
+        }          //----------
+
+        ),
+
+    );
+
+  }
+
 }
