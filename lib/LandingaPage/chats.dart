@@ -11,6 +11,10 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
+  late String text;
+  // late List<String> textMessages=;
+  final fieldText = TextEditingController();
+  List<String> textMessages = [];
   List<FriendsModel> messages = [
     FriendsModel(
         name: 'Ramanujan',
@@ -53,6 +57,7 @@ class _ChatsState extends State<Chats> {
         messageCount: 2,
         messageType: "receiver"),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,16 +132,18 @@ class _ChatsState extends State<Chats> {
         child: Column(children: <Widget>[
           Expanded(
             child: ListView.builder(
-              itemCount: messages.length,
+              itemCount: textMessages.length,
+              // messages.length,
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 10, bottom: 10),
-              physics: NeverScrollableScrollPhysics(),
+
               itemBuilder: (context, index) {
                 return Container(
                   padding:
                       EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
                   child: Align(
-                    alignment: (messages[index].messageType == "receiver"
+                    alignment: (index.isOdd
+                        // messages[index].messageType == "receiver"
                         ? Alignment.topLeft
                         : Alignment.topRight),
                     child: Container(
@@ -145,21 +152,23 @@ class _ChatsState extends State<Chats> {
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20),
                             topLeft: Radius.circular(20),
-                            bottomLeft:
-                                messages[index].messageType == "receiver"
-                                    ? Radius.circular(0)
-                                    : Radius.circular(20),
-                            bottomRight:
-                                messages[index].messageType == "receiver"
-                                    ? Radius.circular(20)
-                                    : Radius.circular(0)),
-                        color: (messages[index].messageType == "receiver"
+                            bottomLeft: index.isOdd
+                                // messages[index].messageType == "receiver"
+                                ? Radius.circular(0)
+                                : Radius.circular(20),
+                            bottomRight: index.isOdd
+                                // messages[index].messageType == "receiver"
+                                ? Radius.circular(20)
+                                : Radius.circular(0)),
+                        color: index.isOdd
+                            //  (messages[index].messageType == "receiver")
                             ? Colors.grey[600]
-                            : Colors.grey[900]),
+                            : Colors.grey[900],
                       ),
                       padding: EdgeInsets.all(16),
                       child: Text(
-                        messages[index].text,
+                        textMessages[index].toString(),
+                        // messages[index].text,
                         style: GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 color: Colors.white,
@@ -199,17 +208,60 @@ class _ChatsState extends State<Chats> {
                     padding:
                         const EdgeInsets.only(left: 0, top: 15, bottom: 15),
                     child: TextField(
+                      controller: fieldText,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade900,
                         filled: true,
                         hintText: 'message',
-                        contentPadding: EdgeInsets.only(top: 10, left: 10),
+
+                        contentPadding: EdgeInsets.only(
+                          top: 10,
+                          left: 20,
+                        ),
                         suffixIcon: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              print('clicked');
+                              print(messages.length);
+                              textMessages.add(text.toString());
+                              clearText();
+
+                              setState(() {});
+                            },
                             icon: Icon(
-                              Icons.emoji_emotions_outlined,
+                              Icons.send,
                               color: Colors.grey.shade600,
                             )),
+                        //  Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     IconButton(
+                        //         onPressed: () {
+                        //           print('clicked');
+
+                        //           messages.add(FriendsModel(
+                        //               name: 'name',
+                        //               text: text,
+                        //               date: 'today',
+                        //               imageURL:
+                        //                   'https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg',
+                        //               messageCount: 3,
+                        //               messageType: 'sender'));
+                        //           setState(() {});
+                        //         },
+                        //         icon: Icon(
+                        //           Icons.send,
+                        //           color: Colors.grey.shade600,
+                        //         )),
+                        //     IconButton(
+                        //         onPressed: () {},
+                        //         icon: Icon(
+                        //           Icons.emoji_emotions_outlined,
+                        //           color: Colors.grey.shade600,
+                        //         )),
+                        //   ],
+                        // ),
+
                         hintStyle: TextStyle(
                             color: Colors.grey.shade400,
                             fontWeight: FontWeight.bold),
@@ -224,57 +276,33 @@ class _ChatsState extends State<Chats> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      onChanged: (value) {
+                        text = value.toString();
+                        print(text + 'printing text');
+                        print(value + 'printing value');
+
+                        // messages.add(
+                        //   FriendsModel(
+                        //     name: 'name',
+                        //     text: text,
+                        //     date: 'today',
+                        //     imageURL:
+                        //         'https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg',
+                        //     messageCount: 3,
+                        //     messageType: 'sender'));
+                      },
                     ),
                   ),
                 )
               ],
             ),
           ),
-          // Container(
-          //   height: 80,
-          //   decoration: BoxDecoration(
-          //     color: Colors.grey[900],
-          //   ),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Transform(
-          //         transform: Matrix4.translationValues(0, -13, 0),
-          //         child: InkWell(
-          //           child: IconButton(
-          //             icon: Icon(
-          //               Icons.photo_camera,
-          //               color: Colors.grey[800],
-          //             ),
-          //             onPressed: () {},
-          //           ),
-          //         ),
-          //       ),
-          //       Transform(
-          //         transform: Matrix4.translationValues(0, -13, 0),
-          //         child: InkWell(
-          //           child: IconButton(
-          //             icon: Icon(
-          //               Icons.keyboard_voice,
-          //               color: Colors.grey[800],
-          //             ),
-          //             onPressed: () {},
-          //           ),
-          //         ),
-          //       ),
-          //       Padding(
-          //         padding: const EdgeInsets.only(left: 15),
-          //         child: TextField(
-          //           decoration: InputDecoration(
-          //               fillColor: Colors.grey[350],
-          //               hintText: "message",
-          //               border: InputBorder.none),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ]),
       ),
     );
+  }
+
+  void clearText() {
+    fieldText.clear();
   }
 }
