@@ -152,22 +152,14 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
   ];
   List< FriendsModel>  friendsModels=[];
   List<StickersModel> stickers = [
-    StickersModel(
-        image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -353,12 +345,12 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal)),
                             )
-                          : Image.memory(
+                          : messages[index].imageS3!=null ? Image.memory(
                               messages[index].imageS3!,
                               width: 200,
                               height: 200,
                               fit: BoxFit.fill,
-                            ),
+                            ): Container(),
                     ),
                   ),
                 );
@@ -430,7 +422,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                     date: 'today',
                                     imageURL: '',
                                     messageCount: 2,
-                                    messageType: "sender"
+                                    messageType: "sender",
+                                    image: false,
+                                    imageS3: null
                                 ));
                               });
                               //   print(friendsModels[index].imageURL);
@@ -622,7 +616,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                 date: 'today',
                                                 imageURL: sticker.image,
                                                 messageCount: 2,
-                                                messageType: "sender"
+                                                messageType: "sender",
+                                                image: false,
+                                                imageS3: null
                                             ));
                                           });
                                        //   print(friendsModels[index].imageURL);
@@ -649,10 +645,10 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                           Container(child: Text("")),
                           Container(child: Text("")
                           )]),
-                  ),
+                  )],
                 ),
-        ]),
+            )),]
       ),
-    );
+      ) );
   }
 }
