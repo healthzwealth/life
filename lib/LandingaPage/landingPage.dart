@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabController =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
 
-    rootBundle.load('assets/bubble animation.riv').then(
+    rootBundle.load('assets/bubble_animation.riv').then(
       (data) {
         final file = rive.RiveFile.import(data);
         final artboard = file.mainArtboard;
@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   height: 500.0,
                   // color: Colors.red,
                   child: rive.RiveAnimation.asset(
-                    'assets/bubble animation.riv', fit: BoxFit.fitHeight,
+                    'assets/bubble_animation.riv', fit: BoxFit.fitHeight,
                     // controllers: [_riveAnimationController],
                     // controllers: [_riveAnimationController.],
                     animations: ['Animation 1'],
