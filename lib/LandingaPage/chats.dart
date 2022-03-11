@@ -6,6 +6,7 @@ import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
+import 'dart:typed_data' show Uint8List;
 
 import 'package:life_app/providers/uploadDiagImageProvider.dart';
 import 'package:provider/provider.dart';
@@ -163,11 +164,29 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
   ];
   @override
   Widget build(BuildContext context) {
-    postDiagUploadImageS3(uploadImageModel) async {
+    postDiagUploadImageS3(UploadImageModel uploadImageModel) async {
       UploadImageProvider upload =
           Provider.of<UploadImageProvider>(context, listen: false);
       await upload.postDiagUploadImageS3(uploadImageModel).then(
-            (value) {},
+            (value) {
+              setState(() {
+                friendsModels.addAll(messages);
+                messages.removeRange(0, messages.length);
+                friendsModels.add(FriendsModel(
+                    name: 'Ranjith',
+                    text: 'Hi!',
+                    date: 'today',
+                    imageURL:'' ,
+                    messageCount: 2,
+                    messageType: "sender",
+                    image: true,
+                    imageS3: uploadImageModel.imageS3
+                ));
+              });
+              //   print(friendsModels[index].imageURL);
+              messages.addAll(friendsModels);
+              friendsModels.removeRange(0, friendsModels.length);
+            },
           );
     }
 
@@ -177,8 +196,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         final File imageFile = File(selectedImage!.path);
         print(imageFile);
         uploadImageModel.imageFile = imageFile;
-        uploadImageModel.fileNameS3 =
-            "LifeApp_ ${DateTime.now().toLocal()}.jpg";
+        uploadImageModel.fileNameS3 = "LifeApp_ ${DateTime.now().toLocal()}.jpg";
+        Uint8List bytes = imageFile.readAsBytesSync();
+        uploadImageModel.imageS3 = bytes  ;
 
         postDiagUploadImageS3(uploadImageModel);
       } else {}
@@ -326,9 +346,11 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                     ? Radius.circular(0)
                                     : Radius.circular(20),
                             bottomRight:
-                                messages[index].messageType == "receiver"
-                                    ? Radius.circular(20)
-                                    : Radius.circular(0)),
+                            messages[index].messageType == "receiver"
+                                ? Radius.circular(20)
+                                : messages[index].image == false
+                                ? Radius.circular(0)
+                                : Radius.circular(20)),
                         color: (messages[index].messageType == "receiver"
                             ? Colors.grey[600]
                             : Colors.grey[900]),
@@ -345,12 +367,16 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal)),
                             )
-                          : messages[index].imageS3!=null ? Image.memory(
-                              messages[index].imageS3!,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.fill,
-                            ): Container(),
+                          : messages[index].imageS3!=null ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.memory(
+                                        messages[index].imageS3!,
+                                        width: 200,
+                                        height: 200,
+                                        fit: BoxFit.fill,
+                                      ),
+
+                            ) : Container(),
                     ),
                   ),
                 );
