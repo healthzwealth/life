@@ -80,7 +80,7 @@ class _FriendsState extends State<Friends> {
             Navigator.of(context).push(PageRouteBuilder(
               pageBuilder:(context,animation,_) {
               //return Chats();
-                return Chats();
+                return ChatsCopy();
               },opaque: false));
             },
             child: Container(
