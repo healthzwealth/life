@@ -192,22 +192,14 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
   ];
   List<FriendsModel> friendsModels = [];
   List<StickersModel> stickers = [
-    StickersModel(
-        image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
-    StickersModel(
-        image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
   ];
   String imageName = "";
 
@@ -421,6 +413,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       padding: EdgeInsets.all(16),
                                       child: Stack(
                                         children: <Widget>[
+                                          messages[index].image == false ?
                                           Text(
                                             messages[index].text,
                                             style: GoogleFonts.roboto(
@@ -429,7 +422,19 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                     fontSize: 15,
                                                     fontWeight:
                                                         FontWeight.normal)),
-                                          ),
+                                          ): messages[index].name=='image' ?
+                                            Image.asset(
+                                                  messages[index].imageURL)
+                                              : messages[index].imageS3!=null ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(20),
+                                            child: Image.memory(
+                                              messages[index].imageS3!,
+                                              width: 200,
+                                              height: 200,
+                                              fit: BoxFit.fill,
+                                            ),
+
+                                          ):Container(),
                                           (messages[index].selectedIcons != "")
                                               ? Transform(
                                                   transform: (messages[index].messageType ==
@@ -589,37 +594,38 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    Transform(
+                      transform: Matrix4.translationValues(0, 0, 0),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.emoji_emotions_sharp,
+                          color: pressAttention ? Colors.white : Colors.yellow,
+                          // color: Colors.grey
+                        ),
+                        onPressed: () {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          if (count == 0) {
+                            setState(() {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              count = 1;
+                              _visible = true;
+                              pressAttention = false;
+                            });
+                            print(_visible);
+                            print(count);
+                          } else if (count >= 0) {
+                            setState(() {
+                              count = 0;
+                              _visible = false;
+                              pressAttention = true;
+                            });
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 )),
-            Transform(
-              transform: Matrix4.translationValues(0, 0, 0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.emoji_emotions_sharp,
-                  color: pressAttention ? Colors.white : Colors.yellow,
-                  // color: Colors.grey
-                ),
-                onPressed: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  if (count == 0) {
-                    setState(() {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      count = 1;
-                      _visible = true;
-                      pressAttention = false;
-                    });
-                    print(_visible);
-                    print(count);
-                  } else if (count >= 0) {
-                    setState(() {
-                      count = 0;
-                      _visible = false;
-                      pressAttention = true;
-                    });
-                  }
-                },
-              ),
-            ),
+
             _visible == false
                 ? Container()
                 : Padding(
@@ -659,19 +665,16 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    friendsModels
-                                                        .addAll(messages);
-                                                    messages.removeRange(
-                                                        0, messages.length);
-                                                    friendsModels
-                                                        .add(FriendsModel(
+                                                    friendsModels.addAll(messages);
+                                                    messages.removeRange( 0, messages.length);
+                                                    friendsModels.add(FriendsModel(
                                                       name: 'image',
                                                       text: 'Hi!',
                                                       date: 'today',
                                                       imageURL: sticker.image,
                                                       messageCount: 2,
                                                       messageType: "sender",
-                                                      image: false,
+                                                      image: true,
                                                       imageS3: null,
                                                       selectedIcons: "",
                                                       reactionPanel: "all",
