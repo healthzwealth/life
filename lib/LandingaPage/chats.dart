@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:life_app/Models/StickersModel.dart';
+import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
+import 'dart:typed_data' show Uint8List;
+
+import 'package:life_app/providers/uploadDiagImageProvider.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -73,6 +82,8 @@ class _ChatsState extends State<Chats> {
         messageType: "sender",
         selectedIcons: "",
         reactionPanel: "all"),
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hello!',
@@ -83,6 +94,8 @@ class _ChatsState extends State<Chats> {
         messageType: "receiver",
         selectedIcons: "",
         reactionPanel: "all"),
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Happy Birthday!',
@@ -93,6 +106,8 @@ class _ChatsState extends State<Chats> {
         messageType: "sender",
         selectedIcons: "",
         reactionPanel: "all"),
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Thank you!',
@@ -103,6 +118,8 @@ class _ChatsState extends State<Chats> {
         messageType: "receiver",
         selectedIcons: "",
         reactionPanel: "all"),
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
@@ -112,7 +129,11 @@ class _ChatsState extends State<Chats> {
         messageCount: 2,
         messageType: "receiver",
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all",
+       image: false,
+        imageS3: null),
+
+        ),
 
         FriendsModel(
         name: 'Ramanujan',
@@ -133,13 +154,81 @@ class _ChatsState extends State<Chats> {
         messageCount: 2,
         messageType: "receiver",
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all"
+        image: false,
+        imageS3: null
+        ),
   ];
-
+ List< FriendsModel>  friendsModels=[];
+  List<StickersModel> stickers = [
+    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+   ];
   String imageName="";
 
   @override
   Widget build(BuildContext context) {
+    postDiagUploadImageS3(UploadImageModel uploadImageModel) async {
+      UploadImageProvider upload =
+          Provider.of<UploadImageProvider>(context, listen: false);
+      await upload.postDiagUploadImageS3(uploadImageModel).then(
+            (value) {
+              setState(() {
+                friendsModels.addAll(messages);
+                messages.removeRange(0, messages.length);
+                friendsModels.add(FriendsModel(
+                    name: 'Ranjith',
+                    text: 'Hi!',
+                    date: 'today',
+                    imageURL:'' ,
+                    messageCount: 2,
+                    messageType: "sender",
+                    image: true,
+                    imageS3: uploadImageModel.imageS3
+                ));
+              });
+              //   print(friendsModels[index].imageURL);
+              messages.addAll(friendsModels);
+              friendsModels.removeRange(0, friendsModels.length);
+            },
+          );
+    }
+
+    void setUploadImageModel() {
+      if (selectedImage != null) {
+        UploadImageModel uploadImageModel = new UploadImageModel();
+        final File imageFile = File(selectedImage!.path);
+        print(imageFile);
+        uploadImageModel.imageFile = imageFile;
+        uploadImageModel.fileNameS3 = "LifeApp_ ${DateTime.now().toLocal()}.jpg";
+        Uint8List bytes = imageFile.readAsBytesSync();
+        uploadImageModel.imageS3 = bytes  ;
+
+        postDiagUploadImageS3(uploadImageModel);
+      } else {}
+    }
+
+    openGallery(BuildContext context) async {
+      selectedImage = await _picker.pickImage(
+          source: ImageSource.gallery, imageQuality: 30);
+      this.setState(() {
+        setUploadImageModel();
+      });
+    }
+
+    const double _kKeyboardHeight = 350;
+    final double rows = 2;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final int colorsCount = stickers.length;
+    final int colorsPerRow = (colorsCount / rows).ceil();
+    final double itemWidth = screenWidth / colorsPerRow;
+    final double itemHeight = _kKeyboardHeight / 3;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -220,7 +309,10 @@ class _ChatsState extends State<Chats> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               //physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                  return AnimationConfiguration.staggeredList(
+
+                  return (messages[index].name=='image') ?
+
+                  AnimationConfiguration.staggeredList(
                                   position: index,
                                   duration: Duration(milliseconds: 500),
                                   // delay: Duration(milliseconds: 100),
@@ -338,7 +430,9 @@ class _ChatsState extends State<Chats> {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    openGallery(context);
+                  },
                   icon: Icon(
                     Icons.photo_camera,
                     color: Colors.grey[800],
@@ -352,22 +446,96 @@ class _ChatsState extends State<Chats> {
                   ),
                 ),
                 Expanded(
-                  child: Stack(
-                    //padding:
-                    //    const EdgeInsets.only(left: 0, top: 15, bottom: 15),
-                    children: <Widget>[
-                      TextField(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 0, top: 15, bottom: 15,),
+                    child: TextField(onChanged: (value) {
+                                  text = value.toString();
+                    },
+                      controller: fieldText,
+                      style: TextStyle(color: Colors.white),
+                      onTap: () {
+                                        if (count == 1) {
+                                                      setState(() {
+                                                            count=0;
+                                                            _visible = false;
+                                                            pressAttention=true;
+                                                        });
+                                                      print(_visible);
+                                                      print(count);
+                                        }
+
+                                 },
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade900,
                         filled: true,
                         hintText: 'message',
                         contentPadding: EdgeInsets.only(top: 10, left: 10),
                         suffixIcon: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              print('clicked');
+                              print(messages.length);
+                             // textMessages.add(text.toString());
+                              clearText();
+                              setState(() {
+                                friendsModels.addAll(messages);
+                                messages.removeRange(0, messages.length);
+                                friendsModels.add(FriendsModel(
+                                    name: 'text',
+                                    text: text.toString(),
+                                    date: 'today',
+                                    imageURL: '',
+                                    messageCount: 2,
+                                    messageType: "sender",
+                                    image: false,
+                                    imageS3: null
+                                ));
+                              });
+                              //   print(friendsModels[index].imageURL);
+                              messages.addAll(friendsModels);
+                              friendsModels.removeRange(0, friendsModels.length);
+                            },
+
                             icon: Icon(
-                              Icons.emoji_emotions_outlined,
+
+                              Icons.send,
+
                               color: Colors.grey.shade600,
+
                             )),
+                        // suffixIcon:  IconButton(
+                        //   icon: Icon(Icons.emoji_emotions_sharp,
+                        //     color: pressAttention ? Colors.white : Colors.yellow,
+                        //     // color: Colors.grey
+                        //   ),
+                        //   onPressed: () {
+                        //     if (count == 0) {
+                        //       print("Im here");
+                        //       setState(() {
+                        //         count++;
+                        //         _visible = true;
+                        //         pressAttention=false;
+                        //       });
+                        //       print(_visible);
+                        //       print(count);
+                        //     }
+                        //     else if (count >= 0) {
+                        //       print("Im else");
+                        //       setState(() {
+                        //         count--;
+                        //         _visible = false;
+                        //         pressAttention=true;
+                        //       });
+                        //
+                        //     }
+                        //
+                        //     // Navigator.of(context).push(PageRouteBuilder(
+                        //     //     pageBuilder:(context,animation,_) {
+                        //     //       return StickerKeyboard();
+                        //     //
+                        //     //     },opaque: false));
+                        //   },
+                        // ),
                         hintStyle: TextStyle(
                             color: Colors.grey.shade400,
                             fontWeight: FontWeight.bold),
@@ -397,8 +565,169 @@ class _ChatsState extends State<Chats> {
           ),
           
         ]),
+                  ),
+                ),
+                //       Transform(
+                //         transform: Matrix4.translationValues(0, -13, 0),
+                Transform(transform: Matrix4.translationValues(0, 0, 0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.emoji_emotions_sharp,
+                      color: pressAttention ? Colors.white : Colors.yellow,
+                      // color: Colors.grey
+                    ),
+                    onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (count == 0) {
+                        setState(() {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          count=1;
+                          _visible = true;
+                          pressAttention = false;
+                        });
+                        print(_visible);
+                        print(count);
+                      } else if (count >= 0) {
+                        setState(() {
+                          count=0;
+                          _visible = false;
+                          pressAttention = true;
+                        });
+                      }
+
+                      // Navigator.of(context).push(PageRouteBuilder(
+                      //     pageBuilder:(context,animation,_) {
+                      //       return StickerKeyboard();
+                      //
+                      //     },opaque: false));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Container(
+          //   height: 80,
+          //   decoration: BoxDecoration(
+          //     color: Colors.grey[900],
+          //   ),
+          //   child: Row(
+          //     children: <Widget>[
+          //       Transform(
+          //         transform: Matrix4.translationValues(0, -13, 0),
+          //         child: InkWell(
+          //           child: IconButton(
+          //             icon: Icon(
+          //               Icons.photo_camera,
+          //               color: Colors.grey[800],
+          //             ),
+          //             onPressed: () {},
+          //           ),
+          //         ),
+          //       ),
+          //       Transform(
+          //         transform: Matrix4.translationValues(0, -13, 0),
+          //         child: InkWell(
+          //           child: IconButton(
+          //             icon: Icon(
+          //               Icons.keyboard_voice,
+          //               color: Colors.grey[800],
+          //             ),
+          //             onPressed: () {},
+          //           ),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(left: 15),
+          //         child: TextField(
+          //           decoration: InputDecoration(
+          //               fillColor: Colors.grey[350],
+          //               hintText: "message",
+          //               border: InputBorder.none),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          _visible == false ? Container() :
+          Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: Container(
+              height: _kKeyboardHeight,
+              color: Colors.black,
+              child: Wrap(
+                children: <Widget>[
+                  //  Text("Im here"),
+                  TabBar(
+                    tabs: tabs,
+                    controller: _tabController,
+                    indicatorColor: Colors.transparent,
+                    labelColor: Color(0xfff5d977),
+                    unselectedLabelColor: Color(0xff666666),
+                    labelStyle: GoogleFonts.roboto(textStyle: TextStyle(fontSize: 14)),
+                  ),
+                  SizedBox(
+                    height: 300.0,
+                    child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          Container(child: Text("")),
+                          ListView.builder(
+                            itemCount:stickers.length,
+                             shrinkWrap: true,
+                            padding: EdgeInsets.only(top: 0, bottom: 0),
+                            //  physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return          Container(
+                                height: _kKeyboardHeight,
+                                child: Wrap(
+                                  children: <Widget>[
+                                    for (final sticker in stickers)
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            friendsModels.addAll(messages);
+                                            messages.removeRange(0, messages.length);
+                                            friendsModels.add(FriendsModel(
+                                                name: 'image',
+                                                text: 'Hi!',
+                                                date: 'today',
+                                                imageURL: sticker.image,
+                                                messageCount: 2,
+                                                messageType: "sender",
+                                                image: false,
+                                                imageS3: null
+                                            ));
+                                          });
+                                       //   print(friendsModels[index].imageURL);
+                                          messages.addAll(friendsModels);
+                                          friendsModels.removeRange(0, friendsModels.length);
+                                        },
+                                        child: Container(
+                                          width: itemWidth,
+                                          height: itemHeight,
+                                          // padding:
+                                          //  EdgeInsets.only(left: 14, right: 14, top: 0, bottom: 0),
+                                          child: Transform.scale(
+                                              scale: 1,
+                                              child: Image.asset(
+                                                  sticker
+                                                      .image)),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              );
+                            },
+                          ) ,
+                          Container(child: Text("")),
+                          Container(child: Text("")
+                          )]),
+                  )],
+                ),
+            )),]
       ),
-    );
+      ) );
   }
 
   void toggleSelection() {
@@ -534,4 +863,49 @@ class _ChatsState extends State<Chats> {
     });
     
   }
+}
+
+
+class ChatsCopy extends StatefulWidget {
+  const ChatsCopy({Key? key}) : super(key: key);
+
+  @override
+  _ChatsCopyState createState() => _ChatsCopyState();
+}
+class _ChatsCopyState extends State<ChatsCopy> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: LayoutBuilder(builder: (context, constraints) {
+          return Container(
+                  child: TweenAnimationBuilder(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: Duration(milliseconds: 1300),
+                  child: Chats(),
+                      builder: (context, value, child) {
+                               return ShaderMask(
+
+                                      blendMode: BlendMode.modulate,
+                                      shaderCallback: (rect) {return RadialGradient(
+                                      radius:  (value != null ? (value as double) * 5 : 5.00),
+                                      colors: [  Colors.white,   Colors.white,    Colors.transparent,    Colors.transparent   ],
+                                      stops: [1.0, 0.65, 0.5, 0.0],
+                                      center: FractionalOffset(0.0, 0.65))
+                                          .createShader(rect);
+                                      },
+                                      child: child,
+                               );
+                               },
+                  ),
+          );
+        }          //----------
+
+        ),
+
+    );
+
+  }
+
 }

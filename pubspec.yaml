@@ -27,14 +27,17 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   google_fonts: 2.1.1
   rive: 0.7.22
-  
-  
+  simple_s3: ^0.3.2
   cached_network_image: ^3.0.0
+  image_picker: ^0.8.4+1
+  flutter_aws_s3_client: ^0.6.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  provider: ^6.0.2
   flutter_slidable: ^1.2.0
 
 dev_dependencies:
@@ -63,7 +66,16 @@ flutter:
     - assets/chat_new.png
     - assets/emojione_monotone_game_die.png
     - assets/home_smile.png
-    - assets/bubble animation.riv
+    - assets/bubble_animation.riv
+    - assets/frame_2.png
+    - assets/frame_3.png
+    - assets/frame_4.png
+    - assets/frame_5.png
+    - assets/frame_6.png
+    - assets/frame_7.png
+    - assets/frame_8.png
+    - assets/frame_1.png
+    - assets/frame_1830.png
     - assets/angry2.png
     - assets/sad2.png
     - assets/love2.png

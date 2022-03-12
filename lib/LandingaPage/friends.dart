@@ -22,6 +22,8 @@ class _FriendsState extends State<Friends> {
         messageType: "sender",
         selectedIcons: "",
         reactionPanel: "all"),
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hello!',
@@ -29,9 +31,12 @@ class _FriendsState extends State<Friends> {
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
-        messageType: "receiver",
+        messageType: "sender",
+        image: false,
+        imageS3: null
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all"
+        ),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Happy Birthday!',
@@ -40,6 +45,8 @@ class _FriendsState extends State<Friends> {
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender",
+        image: false,
+        imageS3: null,
         selectedIcons: "",
         reactionPanel: "all"),
     FriendsModel(
@@ -51,7 +58,9 @@ class _FriendsState extends State<Friends> {
         messageCount: 2,
         messageType: "receiver",
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
@@ -61,7 +70,9 @@ class _FriendsState extends State<Friends> {
         messageCount: 2,
         messageType: "receiver",
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all",
+        image: false,
+        imageS3: null),
   ];
   @override
   Widget build(BuildContext context) {

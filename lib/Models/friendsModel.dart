@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class FriendsModel {
   late String name;
   late String text;
@@ -7,6 +9,8 @@ class FriendsModel {
   late int messageCount;
   late String selectedIcons;
   late String reactionPanel;
+  Uint8List? imageS3;
+  bool? image;
   FriendsModel(
       {required this.name,
       required this.text,
@@ -15,5 +19,8 @@ class FriendsModel {
       required this.messageCount,
       required this.messageType,
       required this.selectedIcons,
-      required this.reactionPanel});
+      required this.reactionPanel
+      this.imageS3,
+      this.image,
+      });
 }
