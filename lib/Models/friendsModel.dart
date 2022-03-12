@@ -19,7 +19,7 @@ class FriendsModel {
       required this.messageCount,
       required this.messageType,
       required this.selectedIcons,
-      required this.reactionPanel
+      required this.reactionPanel,
       this.imageS3,
       this.image,
       });
