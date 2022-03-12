@@ -390,7 +390,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                         ? Alignment.topLeft
                                         : Alignment.topRight),
                                     child: Container(
-                                      decoration: BoxDecoration(
+                                      decoration: messages[index].name=='image' || messages[index].image == true ? BoxDecoration(): BoxDecoration(
                                         // border: RoundedRectangleBorder(),
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(20),
@@ -424,7 +424,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                         FontWeight.normal)),
                                           ): messages[index].name=='image' ?
                                             Image.asset(
-                                                  messages[index].imageURL)
+                                                messages[index].imageURL)
                                               : messages[index].imageS3!=null ? ClipRRect(
                                             borderRadius: BorderRadius.circular(20),
                                             child: Image.memory(
