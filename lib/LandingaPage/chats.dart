@@ -652,7 +652,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                 children: [
                                   Container(child: Text("")),
                                   ListView.builder(
-                                    itemCount: stickers.length,
+                                    itemCount: 1,
                                     shrinkWrap: true,
                                     padding: EdgeInsets.only(top: 0, bottom: 0),
                                     //  physics: NeverScrollableScrollPhysics(),
