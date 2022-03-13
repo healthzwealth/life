@@ -90,19 +90,10 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
   }
 
   List<Tab> tabs = [
-    Tab(
-      text: 'Memotion',
-    ),
-    Tab(
-      text: 'Sticker',
-    ),
-       Tab(
-      text: 'GIF',
-    )
-    ,
-       Tab(
-      text: 'Emoji',
-    )
+    Tab( text: 'Memotion'),
+    Tab( text: 'Sticker'),
+    Tab( text: 'GIF'),
+    Tab( text: 'Emoji')
   ];
   @override
   void dispose() {
@@ -232,24 +223,24 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         (value) {
           setState(() {
             imageS3 = uploadImageModel.imageS3;
-            // friendsModels.addAll(messages);
-            // messages.removeRange(0, messages.length);
-            // friendsModels.add(FriendsModel(
-            //     name: 'Ranjith',
-            //     text: 'Hi!',
-            //     date: 'today',
-            //     imageURL: '',
-            //     messageCount: 2,
-            //     messageType: "sender",
-            //     image: true,
-            //     imageS3: uploadImageModel.imageS3,
-            //     selectedIcons: '',
-            //     reactionPanel: ''));
-            // updateMessageListWithImage(imageS3!);
+            FriendsModel friendsModel= new FriendsModel(
+                name: 'Ranjith',
+                text: 'Hi!',
+                date: 'today',
+                imageURL: '',
+                messageCount: 2,
+                messageType: "sender",
+                image: true,
+                imageS3: uploadImageModel.imageS3,
+                selectedIcons: '',
+                reactionPanel: '');
+            messages.add(friendsModel);
+            _controller.animateTo(
+              _controller.position.maxScrollExtent+160,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeOut,
+            );
           });
-          //   print(friendsModels[index].imageURL);
-          // messages.addAll(friendsModels);
-          // friendsModels.removeRange(0, friendsModels.length);
         },
       );
     }
@@ -912,34 +903,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         curve: Curves.easeOut,
       );
     });
-    
   }
-
-  void updateMessageListWithImage( Uint8List  image) {
-    int len = messages.length;
-    FriendsModel friendsModel = new FriendsModel(
-        date: "today",
-        imageURL: '',
-        messageCount: len+2,
-        messageType: "sender",
-        name: "image",
-        selectedIcons: '',
-        text: 'Hi',
-        reactionPanel: 'all',
-        image: true,
-        imageS3: image);
-    setState(() {
-      messages.add(friendsModel);
-      _controller.animateTo(
-        _controller.position.maxScrollExtent+160,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-      );
-    });
-    
-  }
-
-  
 }
 
 class ChatsCopy extends StatefulWidget {
