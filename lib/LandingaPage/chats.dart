@@ -64,6 +64,13 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         reactionPanel: "all",
       ));
     }
+    setState(() {
+      _controller.animateTo(
+        _controller.position.maxScrollExtent,
+        duration: Duration(seconds: 2),
+        curve: Curves.fastOutSlowIn,
+      ); 
+    });
   }
 
   getImages() async {
@@ -71,7 +78,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
     UploadImageProvider downloadIamgeProvider =
         Provider.of<UploadImageProvider>(context, listen: false);
     setState(() {});
-    print('______________________________');
+   
     await downloadIamgeProvider.getAllImages().then((values) {
       setState(() {
         awsImageList = values;
@@ -88,12 +95,6 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
     ),
     Tab(
       text: 'Sticker',
-    ),
-    Tab(
-      text: 'GIF',
-    ),
-    Tab(
-      text: 'emoji',
     )
   ];
   @override
@@ -176,7 +177,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         messageCount: 2,
         messageType: "sender",
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all",
+        image: false,
+        imageS3: null),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Going great. I won!',
@@ -192,25 +195,36 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
   ];
   List<FriendsModel> friendsModels = [];
   List<StickersModel> stickers = [
-    StickersModel( image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
-    StickersModel( image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
-    StickersModel( image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_1.png', messageType: 'receiver', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_2.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_3.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_4.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_5.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_6.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_7.png', messageType: 'sender', name: 'ABB'),
+    StickersModel(
+        image: 'assets/frame_8.png', messageType: 'sender', name: 'ABB'),
   ];
   String imageName = "";
-
+ Uint8List? imageS3;
   @override
   Widget build(BuildContext context) {
+
+  //----------------------------ATTACH IMAGE  FUNCTION /UPLOADING IMAGE/OPEN IMAGE GALLERY---------------------------------------  
     postDiagUploadImageS3(UploadImageModel uploadImageModel) async {
       UploadImageProvider upload =
           Provider.of<UploadImageProvider>(context, listen: false);
       await upload.postDiagUploadImageS3(uploadImageModel).then(
         (value) {
           setState(() {
+            imageS3 = uploadImageModel.imageS3;
             friendsModels.addAll(messages);
             messages.removeRange(0, messages.length);
             friendsModels.add(FriendsModel(
@@ -254,7 +268,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         setUploadImageModel();
       });
     }
-
+//-----------------------------------------------------------------------------------------------------
     const double _kKeyboardHeight = 350;
     final double rows = 2;
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -355,6 +369,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
 
                         child: Stack(
                           children: <Widget>[
+
                             Slidable(
                               key: const ValueKey(0),
                               closeOnScroll: true,
@@ -375,13 +390,11 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                 //onLongPress: toggleSelection,
                                 behavior: HitTestBehavior.translucent,
                                 onTap: toggleSelectionClose,
-                                onTapDown: (details) {
-                                  print(" ON TAP DOWN ::: " +
-                                      details.kind!.index.toString());
-                                },
                                 onLongPressStart: (details) =>
-                                    {longPressStart(details, index)},
-                                child: Container(
+                                    {
+                                      longPressStart(details, index)},
+
+                                child:  Container(
                                   padding: EdgeInsets.only(
                                       left: 9, right: 14, top: 10, bottom: 20),
                                   child: Align(
@@ -389,52 +402,45 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                             "receiver"
                                         ? Alignment.topLeft
                                         : Alignment.topRight),
-                                    child: Container(
-                                      decoration: messages[index].name=='image' || messages[index].image == true ? BoxDecoration(): BoxDecoration(
-                                        // border: RoundedRectangleBorder(),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(20),
-                                            topLeft: Radius.circular(20),
-                                            bottomLeft:
-                                                messages[index].messageType ==
-                                                        "receiver"
-                                                    ? Radius.circular(0)
-                                                    : Radius.circular(20),
-                                            bottomRight:
-                                                messages[index].messageType ==
-                                                        "receiver"
-                                                    ? Radius.circular(20)
-                                                    : Radius.circular(0)),
-                                        color: (messages[index].messageType ==
-                                                "receiver"
-                                            ? Colors.grey[600]
-                                            : Colors.grey[900]),
-                                      ),
+//------------------------------IF NOT 'IMAGE MESSAGE' GO INSIDE CONTAINER----------------------------------------                                        
+                                    child: messages[index].image == false
+                                              ? Container(
+                                                  decoration:  BoxDecoration(
+                                                  borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(20),
+                                                  topLeft: Radius.circular(20),
+                                                  bottomLeft: messages[index]
+                                                              .messageType ==
+                                                          "receiver"
+                                                      ? Radius.circular(0)
+                                                      : Radius.circular(20),
+                                                  bottomRight: messages[index]
+                                                              .messageType ==
+                                                          "receiver"
+                                                      ? Radius.circular(20)
+                                                      : Radius.circular(0)),
+                                              color: (messages[index]
+                                                          .messageType ==
+                                                      "receiver"
+                                                  ? Colors.grey[600]
+                                                  : Colors.grey[900]),
+                                            ),
                                       padding: EdgeInsets.all(16),
+
+//---------------STACKING 'TEXT MESSAGE' WITH SELECTED 'EMOJI' AND ' RECEIVER'S IMAGE' (CIRCLE AVATAR - FOR SLIDABLE)-------------------------
                                       child: Stack(
                                         children: <Widget>[
-                                          messages[index].image == false ?
+                               //---------'TEXT MESSAGE'-------------------           
                                           Text(
-                                            messages[index].text,
-                                            style: GoogleFonts.roboto(
-                                                textStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                          ): messages[index].name=='image' ?
-                                            Image.asset(
-                                                messages[index].imageURL)
-                                              : messages[index].imageS3!=null ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(20),
-                                            child: Image.memory(
-                                              messages[index].imageS3!,
-                                              width: 200,
-                                              height: 200,
-                                              fit: BoxFit.fill,
-                                            ),
-
-                                          ):Container(),
+                                                  messages[index].text,
+                                                  style: GoogleFonts.roboto(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                ),
+                                            
                                           (messages[index].selectedIcons != "")
                                               ? Transform(
                                                   transform: (messages[index].messageType ==
@@ -449,6 +455,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                               Colors.grey[900],
                                                           borderRadius: BorderRadius.circular(
                                                               10)),
+                                   //----------'SELECTED EMOJI'------------------                           
                                                       child: Image.asset(
                                                           messages[index].selectedIcons,
                                                           height: 15,
@@ -464,6 +471,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                       backgroundColor:
                                                           Colors.white,
                                                       maxRadius: 14,
+                                             //-------RECEIVER'S IMAGE IN SLIDABLE--------         
                                                       child: Image(
                                                           image: NetworkImage(
                                                               messages[index]
@@ -472,12 +480,33 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                           width: 18)))
                                               : Text(""),
                                         ],
-                                      ),
-                                    ),
+                                      )  
+                                    ):
+ //--------------------------------- ELSE ---> DISPLAY IMAGES------------------------------------------------------                               
+                                 (messages[index].name == 'image')
+                                                  ? Image.asset(
+                                                      messages[index].imageURL)
+                                                  : messages[index].imageS3 !=
+                                                          null
+                                                      ? ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          child: Image.memory(
+                                                            messages[index]
+                                                                .imageS3!,
+                                                            width: 200,
+                                                            height: 200,
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        )
+                                                      : Container(),
                                   ),
-                                ),
+
+                                )
                               ),
                             ),
+ //--------------------------ON LONGPRESS : DISPLAY EMOJIS LIST BAR---------------------------------------------                           
                             (isSelected == true && index == indexPos)
                                 ? getReaction(messages[index])
                                 : Text(""),
@@ -489,6 +518,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                 ),
               ),
             ),
+ //----------------BOTTOM BAR ICONS AND TEXT INPUT BOX------------------------------------------------------------           
             Container(
                 // padding: EdgeInsets.symmetric(horizontal: 8),
                 height: 70,
@@ -544,30 +574,19 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                             contentPadding: EdgeInsets.only(top: 10, left: 10),
                             suffixIcon: IconButton(
                                 onPressed: () {
-                                  print('clicked');
-                                  print(messages.length);
-                                  // textMessages.add(text.toString());
-                                  clearText();
+                                  print("PRESS : "+text.toString());
+                                  
                                   setState(() {
-                                    friendsModels.addAll(messages);
-                                    messages.removeRange(0, messages.length);
-                                    friendsModels.add(FriendsModel(
-                                      name: 'text',
-                                      text: text.toString(),
-                                      date: 'today',
-                                      imageURL: '',
-                                      messageCount: 2,
-                                      messageType: "sender",
-                                      image: false,
-                                      imageS3: null,
-                                      selectedIcons: "",
-                                      reactionPanel: "all",
-                                    ));
+                                    // friendsModels.addAll(messages);
+                                    // messages.removeRange(0, messages.length);
+                                     updateMessageList(text.toString());
+                                     
                                   });
+                                  clearText();
                                   //   print(friendsModels[index].imageURL);
-                                  messages.addAll(friendsModels);
-                                  friendsModels.removeRange(
-                                      0, friendsModels.length);
+                                  // messages.addAll(friendsModels);
+                                  // friendsModels.removeRange(
+                                  //     0, friendsModels.length);
                                 },
                                 icon: Icon(
                                   Icons.send,
@@ -594,6 +613,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+  //------------------------ON-CLICK ICON TO OPEN STICKERS KEYBOARD ---------------------------------------------              
                     Transform(
                       transform: Matrix4.translationValues(0, 0, 0),
                       child: IconButton(
@@ -625,7 +645,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                     ),
                   ],
                 )),
-
+//------------------------------STICKERS KEYBOARD-------------------------------------------------------
             _visible == false
                 ? Container()
                 : Padding(
@@ -665,26 +685,35 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    friendsModels.addAll(messages);
-                                                    messages.removeRange( 0, messages.length);
-                                                    friendsModels.add(FriendsModel(
-                                                      name: 'image',
-                                                      text: 'Hi!',
-                                                      date: 'today',
-                                                      imageURL: sticker.image,
-                                                      messageCount: 2,
-                                                      messageType: "sender",
-                                                      image: true,
-                                                      imageS3: null,
-                                                      selectedIcons: "",
-                                                      reactionPanel: "all",
-                                                    ));
+                                                    // friendsModels.addAll(messages);
+                                                    // messages.removeRange(0, messages.length);
+                                                    updateMessageListWithSticker(sticker.image);
+                                                    
                                                   });
-                                                  //   print(friendsModels[index].imageURL);
-                                                  messages
-                                                      .addAll(friendsModels);
-                                                  friendsModels.removeRange(
-                                                      0, friendsModels.length);
+                                                  // setState(() {
+                                                  //   friendsModels
+                                                  //       .addAll(messages);
+                                                  //   messages.removeRange(
+                                                  //       0, messages.length);
+                                                  //   friendsModels
+                                                  //       .add(FriendsModel(
+                                                  //     name: 'image',
+                                                  //     text: 'Hi!',
+                                                  //     date: 'today',
+                                                  //     imageURL: sticker.image,
+                                                  //     messageCount: 2,
+                                                  //     messageType: "sender",
+                                                  //     image: true,
+                                                  //     imageS3: null,
+                                                  //     selectedIcons: "",
+                                                  //     reactionPanel: "all",
+                                                  //   ));
+                                                  // });
+                                                  // //   print(friendsModels[index].imageURL);
+                                                  // messages
+                                                  //     .addAll(friendsModels);
+                                                  // friendsModels.removeRange(
+                                                  //     0, friendsModels.length);
                                                 },
                                                 child: Container(
                                                   width: itemWidth,
@@ -702,8 +731,6 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       );
                                     },
                                   ),
-                                  Container(child: Text("")),
-                                  Container(child: Text(""))
                                 ]),
                           )
                         ],
@@ -727,7 +754,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
       isSelected = false;
     });
   }
-
+//------------------------EMOJI LIST DISPLAY FUNCTION-------------------------
   getReaction(FriendsModel friendsModel) {
     return Transform(
         transform: (friendsModel.messageType == "receiver")
@@ -828,24 +855,53 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
 
   void updateMessageList(String value) {
     int len = messages.length;
+    print(value);
     FriendsModel friendsModel = new FriendsModel(
         date: '',
         imageURL: '',
-        messageCount: len + 1,
+        messageCount: len,
         messageType: 'sender',
         name: 'Ramanujam',
         selectedIcons: '',
         text: value,
-        reactionPanel: 'all');
+        reactionPanel: 'all',
+        image: false,
+        imageS3: null,);
+    
     setState(() {
       messages.add(friendsModel);
       _controller.animateTo(
-        _controller.position.maxScrollExtent,
-        duration: Duration(seconds: 4),
+        _controller.position.maxScrollExtent+100,
+        duration: Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
       );
     });
   }
+
+  void updateMessageListWithSticker(String image) {
+    int len = messages.length;
+    FriendsModel friendsModel = new FriendsModel(
+        date: "today",
+        imageURL: image.trim(),
+        messageCount: len+1,
+        messageType: "sender",
+        name: "image",
+        selectedIcons: '',
+        text: 'Hi',
+        reactionPanel: 'all',
+        image: true,
+        imageS3: null,);
+    setState(() {
+      messages.add(friendsModel);
+      _controller.animateTo(
+        _controller.position.maxScrollExtent+120,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    });
+    
+  }
+  
 }
 
 class ChatsCopy extends StatefulWidget {
