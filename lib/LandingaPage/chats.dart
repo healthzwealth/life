@@ -95,6 +95,13 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
     ),
     Tab(
       text: 'Sticker',
+    ),
+       Tab(
+      text: 'GIF',
+    )
+    ,
+       Tab(
+      text: 'Emoji',
     )
   ];
   @override
@@ -225,23 +232,24 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         (value) {
           setState(() {
             imageS3 = uploadImageModel.imageS3;
-            friendsModels.addAll(messages);
-            messages.removeRange(0, messages.length);
-            friendsModels.add(FriendsModel(
-                name: 'Ranjith',
-                text: 'Hi!',
-                date: 'today',
-                imageURL: '',
-                messageCount: 2,
-                messageType: "sender",
-                image: true,
-                imageS3: uploadImageModel.imageS3,
-                selectedIcons: '',
-                reactionPanel: ''));
+            // friendsModels.addAll(messages);
+            // messages.removeRange(0, messages.length);
+            // friendsModels.add(FriendsModel(
+            //     name: 'Ranjith',
+            //     text: 'Hi!',
+            //     date: 'today',
+            //     imageURL: '',
+            //     messageCount: 2,
+            //     messageType: "sender",
+            //     image: true,
+            //     imageS3: uploadImageModel.imageS3,
+            //     selectedIcons: '',
+            //     reactionPanel: ''));
+            // updateMessageListWithImage(imageS3!);
           });
           //   print(friendsModels[index].imageURL);
-          messages.addAll(friendsModels);
-          friendsModels.removeRange(0, friendsModels.length);
+          // messages.addAll(friendsModels);
+          // friendsModels.removeRange(0, friendsModels.length);
         },
       );
     }
@@ -258,6 +266,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         uploadImageModel.imageS3 = bytes;
 
         postDiagUploadImageS3(uploadImageModel);
+
       } else {}
     }
 
@@ -577,8 +586,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                   print("PRESS : "+text.toString());
                                   
                                   setState(() {
-                                    // friendsModels.addAll(messages);
-                                    // messages.removeRange(0, messages.length);
+                     //----------AUTO-SCROLL FOR TEXT-------
                                      updateMessageList(text.toString());
                                      
                                   });
@@ -588,6 +596,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                   // friendsModels.removeRange(
                                   //     0, friendsModels.length);
                                 },
+                                
                                 icon: Icon(
                                   Icons.send,
                                   color: Colors.grey.shade600,
@@ -685,8 +694,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    // friendsModels.addAll(messages);
-                                                    // messages.removeRange(0, messages.length);
+                                               //------AUTO-SCROLL UP FOR STICKERS-----
                                                     updateMessageListWithSticker(sticker.image);
                                                     
                                                   });
@@ -730,7 +738,12 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                         ),
                                       );
                                     },
+
+
                                   ),
+
+                                  Container(child: Text("")),
+                                  Container(child: Text("")),
                                 ]),
                           )
                         ],
@@ -901,6 +914,31 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
     });
     
   }
+
+  void updateMessageListWithImage( Uint8List  image) {
+    int len = messages.length;
+    FriendsModel friendsModel = new FriendsModel(
+        date: "today",
+        imageURL: '',
+        messageCount: len+2,
+        messageType: "sender",
+        name: "image",
+        selectedIcons: '',
+        text: 'Hi',
+        reactionPanel: 'all',
+        image: true,
+        imageS3: image);
+    setState(() {
+      messages.add(friendsModel);
+      _controller.animateTo(
+        _controller.position.maxScrollExtent+160,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    });
+    
+  }
+
   
 }
 
