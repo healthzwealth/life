@@ -7,17 +7,20 @@ class FriendsModel {
   late String imageURL;
   late String messageType;
   late int messageCount;
+  late String selectedIcons;
+  late String reactionPanel;
   Uint8List? imageS3;
   bool? image;
-
-  FriendsModel({
-    required this.name,
-    required this.text,
-    required this.date,
-    required this.imageURL,
-    required this.messageCount,
-    required this.messageType,
-    this.imageS3,
-    this.image,
-  });
+  FriendsModel(
+      {required this.name,
+      required this.text,
+      required this.date,
+      required this.imageURL,
+      required this.messageCount,
+      required this.messageType,
+      required this.selectedIcons,
+      required this.reactionPanel,
+      this.imageS3,
+      this.image,
+      });
 }

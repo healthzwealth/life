@@ -6,10 +6,8 @@ import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:simple_s3/simple_s3.dart';
 
 class UploadImageProvider with ChangeNotifier {
-  Future<String> postDiagUploadImageS3(
+  Future<String> postUploadChatImageS3(
       UploadImageModel uploadImageModel) async {
-    print("Im called");
-
     SimpleS3 _simpleS3 = SimpleS3();
     final response = await _simpleS3.uploadFile(
       uploadImageModel.imageFile,
