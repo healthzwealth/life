@@ -5,10 +5,9 @@ import 'package:life_app/Models/StickersModel.dart';
 import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:life_app/Models/friendsModel.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:life_app/providers/uploadChatImageProvider.dart';
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
-
-import 'package:life_app/providers/uploadDiagImageProvider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -219,7 +218,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
     postDiagUploadImageS3(UploadImageModel uploadImageModel) async {
       UploadImageProvider upload =
           Provider.of<UploadImageProvider>(context, listen: false);
-      await upload.postDiagUploadImageS3(uploadImageModel).then(
+      await upload.postUploadChatImageS3(uploadImageModel).then(
         (value) {
           setState(() {
             imageS3 = uploadImageModel.imageS3;
