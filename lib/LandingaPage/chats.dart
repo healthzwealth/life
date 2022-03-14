@@ -501,7 +501,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                   transform: (messages[index].messageType ==
                                                           "sender")
                                                       ? Matrix4.translationValues(
-                                                          0.0, 40, 5)
+                                                          0.0, 0, 5)
                                                       : Matrix4.translationValues(
                                                           0, 30, 5),
                                                   child: ClipRRect(
@@ -511,9 +511,9 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                           child: Image.memory(
                                                             messages[index]
                                                                 .imageS3!,
-                                                            width: 200,
-                                                            height: 200,
-                                                            fit: BoxFit.fill,
+                                                            width: 220,
+                                                            height: 220,
+                                                            fit: BoxFit.fill
                                                           ),
                                                         ),)
                                                       : Text(""),   
