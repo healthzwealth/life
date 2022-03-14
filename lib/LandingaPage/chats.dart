@@ -236,7 +236,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                 reactionPanel: '');
             messages.add(friendsModel);
             _controller.animateTo(
-              _controller.position.maxScrollExtent+160,
+              _controller.position.maxScrollExtent+210,
               duration: Duration(milliseconds: 500),
               curve: Curves.easeOut,
             );
@@ -483,12 +483,28 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       )  
                                     ):
  //--------------------------------- ELSE ---> DISPLAY IMAGES------------------------------------------------------                               
+                                   Stack(
+                                        children: <Widget>[
                                  (messages[index].name == 'image')
-                                                  ? Image.asset(
-                                                      messages[index].imageURL)
+                                                  ? Transform(
+                                                  transform: (messages[index].messageType ==
+                                                          "sender")
+                                                      ? Matrix4.translationValues(
+                                                          0.0, 20, 5)
+                                                      : Matrix4.translationValues(
+                                                          0, 30, 5),
+                                                  child: Image.asset(
+                                                      messages[index].imageURL))
                                                   : messages[index].imageS3 !=
                                                           null
-                                                      ? ClipRRect(
+                                                      ? Transform(
+                                                  transform: (messages[index].messageType ==
+                                                          "sender")
+                                                      ? Matrix4.translationValues(
+                                                          0.0, 40, 5)
+                                                      : Matrix4.translationValues(
+                                                          0, 30, 5),
+                                                  child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(20),
@@ -499,8 +515,29 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                                             height: 200,
                                                             fit: BoxFit.fill,
                                                           ),
-                                                        )
-                                                      : Container(),
+                                                        ),)
+                                                      : Text(""),   
+                                              (messages[index].selectedIcons != "")
+                                              ? Transform(
+                                                  transform: (messages[index].messageType ==
+                                                          "sender")
+                                                      ? (messages[index].imageS3 != null)? Matrix4.translationValues(
+                                                          0, 200, 10): 
+                                                          Matrix4.translationValues(
+                                                          2.0, 120,5 )
+                                                      : Matrix4.translationValues(
+                                                          0, 0,5 ),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.grey[900],
+                                                          borderRadius: BorderRadius.circular(
+                                                              10)),
+                                   //----------'SELECTED EMOJI'----------------------------------                           
+                                                      child: Image.asset(
+                                                          messages[index].selectedIcons,
+                                                          height: 18,
+                                                          width: 15))):Text("") ]),
                                   ),
 
                                 )
