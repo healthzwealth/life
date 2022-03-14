@@ -11,6 +11,8 @@ class FriendsModel {
   late String reactionPanel;
   Uint8List? imageS3;
   bool? image;
+  bool visibility;
+
   FriendsModel(
       {required this.name,
       required this.text,
@@ -22,5 +24,6 @@ class FriendsModel {
       required this.reactionPanel,
       this.imageS3,
       this.image,
+      required this.visibility,
       });
 }

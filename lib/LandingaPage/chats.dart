@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -61,6 +62,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         imageS3: awsImageList[i].imageS3,
         selectedIcons: "",
         reactionPanel: "all",
+        visibility: true
       ));
     }
     setState(() {
@@ -116,7 +118,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Hello!',
@@ -128,7 +131,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Happy Birthday!',
@@ -140,7 +144,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Thank you!',
@@ -152,7 +157,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
@@ -164,7 +170,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'ok,So how are thing going?',
@@ -176,7 +183,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Going great. I won!',
@@ -188,7 +196,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
   ];
   List<FriendsModel> friendsModels = [];
   List<StickersModel> stickers = [
@@ -232,7 +241,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                 image: true,
                 imageS3: uploadImageModel.imageS3,
                 selectedIcons: '',
-                reactionPanel: '');
+                reactionPanel: '',
+                visibility: true);
             messages.add(friendsModel);
             _controller.animateTo(
               _controller.position.maxScrollExtent+210,
@@ -268,6 +278,10 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
       });
     }
 //-----------------------------------------------------------------------------------------------------
+    late AnimationController _appearanceController;
+    _appearanceController = AnimationController(
+      vsync: this,
+    );
     const double _kKeyboardHeight = 350;
     final double rows = 2;
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -356,6 +370,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   //physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                     
                     return AnimationConfiguration.staggeredList(
                       position: index,
                       duration: Duration(milliseconds: 500),
@@ -403,7 +418,11 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                         : Alignment.topRight),
 //------------------------------IF NOT 'IMAGE MESSAGE' GO INSIDE CONTAINER----------------------------------------                                        
                                     child: messages[index].image == false
-                                              ? Container(
+                                              ? AnimatedOpacity(
+                                            opacity: messages[index].visibility?1.0:0.0,
+                                            curve: Curves.linearToEaseOut,
+                                            duration: const Duration(milliseconds: 500),
+                                            child: Container(
                                                   decoration:  BoxDecoration(
                                                   borderRadius: BorderRadius.only(
                                                   topRight: Radius.circular(20),
@@ -430,15 +449,14 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                       child: Stack(
                                         children: <Widget>[
                                //---------'TEXT MESSAGE'-------------------           
-                                          Text(
-                                                  messages[index].text,
-                                                  style: GoogleFonts.roboto(
-                                                      textStyle: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                ),
+                                            Text(
+                                                messages[index].text,
+                                                style: GoogleFonts.roboto(
+                                                    textStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.normal)),
+                                            ), 
                                             
                                           (messages[index].selectedIcons != "")
                                               ? Transform(
@@ -480,7 +498,7 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
                                               : Text(""),
                                         ],
                                       )  
-                                    ):
+                                    )):
  //--------------------------------- ELSE ---> DISPLAY IMAGES------------------------------------------------------                               
                                    Stack(
                                         children: <Widget>[
@@ -906,15 +924,21 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         text: value,
         reactionPanel: 'all',
         image: false,
-        imageS3: null,);
+        imageS3: null,
+        visibility: false);
     
     setState(() {
       messages.add(friendsModel);
       _controller.animateTo(
         _controller.position.maxScrollExtent+100,
         duration: Duration(milliseconds: 500),
-        curve: Curves.fastOutSlowIn,
+        curve: Curves.easeInToLinear,   
       );
+      Future.delayed(const Duration(milliseconds: 300), () {
+        setState(() {
+          messages[messages.length-1].visibility = true;
+        });
+     });
     });
   }
 
@@ -930,7 +954,8 @@ class _ChatsState extends State<Chats> with TickerProviderStateMixin {
         text: 'Hi',
         reactionPanel: 'all',
         image: true,
-        imageS3: null,);
+        imageS3: null,
+        visibility: true);
     setState(() {
       messages.add(friendsModel);
       _controller.animateTo(

@@ -24,6 +24,7 @@ class _FriendsState extends State<Friends> {
         reactionPanel: "all",
         image: false,
         imageS3: null,
+        visibility: true
         ),
     FriendsModel(
         name: 'Ramanujan',
@@ -36,7 +37,8 @@ class _FriendsState extends State<Friends> {
         image: false,
         imageS3: null,
         selectedIcons: "",
-        reactionPanel: "all"
+        reactionPanel: "all",
+        visibility: true
         ),
     FriendsModel(
         name: 'Ramanujan',
@@ -49,7 +51,8 @@ class _FriendsState extends State<Friends> {
         image: false,
         imageS3: null,
         selectedIcons: "",
-        reactionPanel: "all"),
+        reactionPanel: "all",
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Thank you!',
@@ -61,7 +64,8 @@ class _FriendsState extends State<Friends> {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
     FriendsModel(
         name: 'Ramanujan',
         text: 'Glad you remembered.',
@@ -73,7 +77,8 @@ class _FriendsState extends State<Friends> {
         selectedIcons: "",
         reactionPanel: "all",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true),
   ];
   @override
   Widget build(BuildContext context) {
