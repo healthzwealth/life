@@ -51,6 +51,7 @@ class UploadImageProvider with ChangeNotifier {
               imageS3: imageresponse.bodyBytes,
             ),
           );
+          // deleteChatImageS3( key );
         }
       }
       print(DateTime.now().toIso8601String());
@@ -61,5 +62,18 @@ class UploadImageProvider with ChangeNotifier {
       print(error);
     }
     return images;
+  }
+
+  Future<bool> deleteChatImageS3(var key) async {
+    SimpleS3 _simpleS3 = SimpleS3();
+    bool result = await SimpleS3.delete(
+      key,
+      'hzw.diag',
+      'us-east-1:fd6b7435-a230-49fa-9ead-fb156204b720', //pool Id
+      AWSRegions.usEast1,
+    );
+    print("Im result-----------------");
+    print(result);
+    return result;
   }
 }
