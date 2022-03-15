@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
     _originalPanelHeight = _originalPanelHeight != 0
         ? _originalPanelHeight
-        : _panelHeightOpen - 50;
+        : _panelHeightOpen - 30;
 
     return SafeArea(
       child: Scaffold(
@@ -133,6 +133,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 print(_fabHeight);
               }),
             ),
+            _fabHeight >= _originalPanelHeight
+                ? Container(
+                    alignment: Alignment.bottomRight,
+                    height: 80,
+                    padding: EdgeInsets.only(right: 25, bottom: 30, top: 10),
+                    child: IconButton(
+                      icon: Image.asset('assets/chat_new.png'),
+                      onPressed: () {
+                        test();
+                      },
+                    ),
+                  )
+                : Container(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -307,17 +320,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              _fabHeight >= _originalPanelHeight
-                  ? Container(
-                      alignment: Alignment.bottomRight,
-                      height: 60,
-                      padding: EdgeInsets.only(right: 30),
-                      child: IconButton(
-                        icon: Image.asset('assets/chat_new.png'),
-                        onPressed: () {},
-                      ),
-                    )
-                  : Container(),
               Transform(
                 transform: Matrix4.translationValues(100, 60, 0),
                 child: Container(
@@ -685,5 +687,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       increment = (end - start) / 60;
     });
+  }
+
+  void test() {
+    print("Method Called.");
   }
 }
