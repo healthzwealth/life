@@ -6,10 +6,8 @@ import 'package:life_app/Models/UploadImageModel.dart';
 import 'package:simple_s3/simple_s3.dart';
 
 class UploadImageProvider with ChangeNotifier {
-  Future<String> postDiagUploadImageS3(
+  Future<String> postUploadChatImageS3(
       UploadImageModel uploadImageModel) async {
-    print("Im called");
-
     SimpleS3 _simpleS3 = SimpleS3();
     final response = await _simpleS3.uploadFile(
       uploadImageModel.imageFile,
@@ -53,6 +51,7 @@ class UploadImageProvider with ChangeNotifier {
               imageS3: imageresponse.bodyBytes,
             ),
           );
+          // deleteChatImageS3( key );
         }
       }
       print(DateTime.now().toIso8601String());
@@ -63,5 +62,18 @@ class UploadImageProvider with ChangeNotifier {
       print(error);
     }
     return images;
+  }
+
+  Future<bool> deleteChatImageS3(var key) async {
+    SimpleS3 _simpleS3 = SimpleS3();
+    bool result = await SimpleS3.delete(
+      key,
+      'hzw.diag',
+      'us-east-1:fd6b7435-a230-49fa-9ead-fb156204b720', //pool Id
+      AWSRegions.usEast1,
+    );
+    print("Im result-----------------");
+    print(result);
+    return result;
   }
 }

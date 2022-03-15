@@ -14,54 +14,71 @@ class _FriendsState extends State<Friends> {
   List<FriendsModel> friends = [
     FriendsModel(
         name: 'Ramanujan',
-        text: 'tell me about you',
+        text: 'Hi!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender",
+        selectedIcons: "",
+        reactionPanel: "all",
         image: false,
-        imageS3: null),
-    FriendsModel(
-        name: 'Reshma',
-        text: 'how are you ?',
-        date: 'today',
-        imageURL:
-            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
-        messageCount: 2,
-        messageType: "sender",
-        image: false,
-        imageS3: null),
-    FriendsModel(
-        name: 'Maddy',
-        text: 'lol',
-        date: 'today',
-        imageURL:
-            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
-        messageCount: 2,
-        messageType: "sender",
-        image: false,
-        imageS3: null),
+        imageS3: null,
+        visibility: true
+        ),
     FriendsModel(
         name: 'Ramanujan',
-        text: 'ttyl',
+        text: 'Hello!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        selectedIcons: "",
+        reactionPanel: "all",
+        visibility: true
+        ),
     FriendsModel(
         name: 'Ramanujan',
-        text: 'hey !',
+        text: 'Happy Birthday!',
         date: 'today',
         imageURL:
             "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
         messageCount: 2,
         messageType: "sender",
         image: false,
-        imageS3: null),
+        imageS3: null,
+        selectedIcons: "",
+        reactionPanel: "all",
+        visibility: true),
+    FriendsModel(
+        name: 'Ramanujan',
+        text: 'Thank you!',
+        date: 'today',
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        messageCount: 2,
+        messageType: "receiver",
+        selectedIcons: "",
+        reactionPanel: "all",
+        image: false,
+        imageS3: null,
+        visibility: true),
+    FriendsModel(
+        name: 'Ramanujan',
+        text: 'Glad you remembered.',
+        date: 'today',
+        imageURL:
+            "https://thewondrous.com/wp-content/uploads/2015/07/cute-profile-pictures.jpg",
+        messageCount: 2,
+        messageType: "receiver",
+        selectedIcons: "",
+        reactionPanel: "all",
+        image: false,
+        imageS3: null,
+        visibility: true),
   ];
   @override
   Widget build(BuildContext context) {
@@ -71,17 +88,12 @@ class _FriendsState extends State<Friends> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => Chats(),
-              //     ));
-
-              Navigator.of(context).push(PageRouteBuilder(
-                  pageBuilder: (context, animation, _) {
-                    return ChatsCopy();
-                  },
-                  opaque: false));
+       
+            Navigator.of(context).push(PageRouteBuilder(
+              pageBuilder:(context,animation,_) {
+              //return Chats();
+                return ChatsCopy();
+              },opaque: false));
             },
             child: Container(
               padding:
@@ -165,21 +177,6 @@ class _FriendsState extends State<Friends> {
         });
   }
 }
-// Route _createRoute() {
-//   // return PageRouteBuilder(
-//   //   pageBuilder: (context, animation, secondaryAnimation) => const  Chats(),
-//   //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//   //     const begin = Offset(0.0, 1.0);
-//   //     const end = Offset.zero;
-//   //     const curve = Curves.ease;
 
-//   //     var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-//   //     return SlideTransition(
-//   //       position: animation.drive(tween),
-//   //       child: child,
-//   //     );
-//   //   },
-//   // );
 
   

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:life_app/LandingaPage/landingPage.dart';
-import 'package:life_app/providers/uploadDiagImageProvider.dart';
+import 'package:life_app/providers/uploadChatImageProvider.dart';
 import 'package:provider/provider.dart';
 
 import 'ModalBottomSheet/cupertino_bottom_sheet.dart';

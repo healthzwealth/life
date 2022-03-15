@@ -67,6 +67,8 @@ flutter:
     - assets/emojione_monotone_game_die.png
     - assets/home_smile.png
     - assets/bubble_animation.riv
+    - assets/bubble_new.riv
+    - assets/bubble2.riv
     - assets/frame_2.png
     - assets/frame_3.png
     - assets/frame_4.png
@@ -76,6 +78,17 @@ flutter:
     - assets/frame_8.png
     - assets/frame_1.png
     - assets/frame_1830.png
+    - assets/angry2.png
+    - assets/sad2.png
+    - assets/love2.png
+    - assets/wow2.png
+    - assets/haha2.png
+    - assets/angry.gif
+    - assets/sad.gif
+    - assets/love.gif
+    - assets/wow.gif
+    - assets/haha.gif
+    - assets/plus.png
     
 
 
