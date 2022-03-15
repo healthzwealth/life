@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late double start;
   late double end;
   late double increment;
+  bool startAnimation = false;
 
   List<Tab> tabs = [
     Tab(
@@ -78,21 +79,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     end = 100;
     interpolate(start, end);
     Timer.periodic(
-        const Duration(
-          milliseconds: 13,
-        ),
-        bounce);
+      const Duration(
+        milliseconds: 13,
+      ),
+      bounce,
+    );
+    //
+    startTimer();
 
     _fabHeight = _initFabHeight;
     _tabController =
         TabController(length: tabs.length, vsync: this, initialIndex: 0);
 
-    rootBundle.load('assets/bubble_animation.riv').then(
-      (data) {
-        final file = rive.RiveFile.import(data);
-        final artboard = file.mainArtboard;
-      },
-    );
+    // rootBundle.load('assets/bubble_animation.riv').then(
+    //   (data) {
+    //     final file = rive.RiveFile.import(data);
+    //     final artboard = file.mainArtboard;
+    //   },
+    // );
   }
 
   @override
@@ -306,77 +310,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Transform(
                 transform: Matrix4.translationValues(100, 60, 0),
                 child: Container(
-                  width: 500.0,
-                  height: 500.0,
-                  // color: Colors.red,
-                  child: rive.RiveAnimation.asset(
-                    'assets/bubble_animation.riv', fit: BoxFit.fitHeight,
-                    // controllers: [_riveAnimationController],
-                    // controllers: [_riveAnimationController.],
-                    animations: ['Animation 1'],
-                  ),
-                ),
-              ),TweenAnimationBuilder(
-                tween: Tween<double>(begin: 2, end: 20),
-                duration: Duration(seconds: 18),
-                curve: Curves.decelerate,
-                builder: (context, value, child) => Transform(
-                  transform: Matrix4.translationValues(
-                      -(MediaQuery.of(context).size.height / (value as double)),
-                      MediaQuery.of(context).size.height / 2.45,
-                      0),
-                  child: Container(
-                    height: 15,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (value <= 12)
-                            ? Colors.transparent
-                            : Color(0xff74dfce)),
-                  ),
-                ),
+                    width: 500.0,
+                    height: 500.0,
+                    // color: Colors.red,
+                    child: (startAnimation == true)
+                        ? rive.RiveAnimation.asset(
+                            'assets/bubble_animation.riv',
+                            fit: BoxFit.fitHeight,
+                            animations: ['Animation 1'],
+                          )
+                        : Container()),
               ),
-
-
-
-              TweenAnimationBuilder(
-                duration: Duration(seconds: 10),
-                tween: Tween<double>(begin: 9, end: 5.9),
-                builder: (context, value, child) => Transform(
-                  transform: Matrix4.translationValues(
-                      -(MediaQuery.of(context).size.height / (value as double)),
-                      MediaQuery.of(context).size.height / 2.05,
-                      0),
-                  child: Container(
-                    height: 10,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (value >= 7)
-                            ? Colors.transparent
-                            : Color(0xff77c6ff)),
-                  ),
-                ),
-              ),
-
-
-
-              TweenAnimationBuilder(
-                duration: Duration(seconds: 13),
-                curve: Curves.decelerate,
-                tween: Tween<double>(begin: 7.0, end: 5.4),
-                builder: (context, value, child) => Transform(
-                  transform: Matrix4.translationValues(
-                      -(MediaQuery.of(context).size.height / (value as double)),
-                      MediaQuery.of(context).size.height / 1.97,
-                      0),
-                  child: Container(
-                    height: 5,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (value >= 5.8)
-                            ? Colors.transparent
-                            : Color(0xffffd46a)),
-                  ),
-                ),
+              Transform(
+                transform: Matrix4.translationValues(-120, 150, 0),
+                child: Container(
+                    width: 500.0,
+                    height: 500.0,
+                    // color: Colors.red,
+                    child: (startAnimation == true)
+                        ? rive.RiveAnimation.asset(
+                            'assets/bubble2.riv',
+                            fit: BoxFit.fitHeight,
+                            animations: ['Slide Animation'],
+                          )
+                        : Container()),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35),
@@ -570,139 +527,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-
-              // rive.RiveAnimation.asset(
-              //   'assets/bubble animation.riv',
-              //   // controllers: [_riveAnimationController],
-              //   animations: ['Animation 1'],
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       MediaQuery.of(context).size.height / 40,
-              //       MediaQuery.of(context).size.height / 3.7,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 7),
-              //     builder: (context, value, child) {
-              //       return
-              //        Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 15,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xff8a8df2)),
-              //     ),
-              //   ),
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       MediaQuery.of(context).size.height / 7.2,
-              //       MediaQuery.of(context).size.height / 3.0,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 7),
-              //     builder: (context, value, child) {
-              //       return Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 10,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xff77c6ff)),
-              //     ),
-              //   ),
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       MediaQuery.of(context).size.height / 6.4,
-              //       MediaQuery.of(context).size.height / 2.9,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 7),
-              //     builder: (context, value, child) {
-              //       return Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 5,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xffffd46a)),
-              //     ),
-              //   ),
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       -(MediaQuery.of(context).size.height / 20.0),
-              //       MediaQuery.of(context).size.height / 2.45,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 7),
-              //     builder: (context, value, child) {
-              //       return Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 15,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xff74dfce)),
-              //     ),
-              //   ),
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       -(MediaQuery.of(context).size.height / 5.9),
-              //       MediaQuery.of(context).size.height / 2.05,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 5),
-              //     builder: (context, value, child) {
-              //       return Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 10,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xff77c6ff)),
-              //     ),
-              //   ),
-              // ),
-              // Transform(
-              //   transform: Matrix4.translationValues(
-              //       -(MediaQuery.of(context).size.height / 5.4),
-              //       MediaQuery.of(context).size.height / 1.97,
-              //       0),
-              //   child: TweenAnimationBuilder(
-              //     tween: Tween<double>(begin: 0, end: 1),
-              //     duration: Duration(seconds: 5),
-              //     builder: (context, value, child) {
-              //       return Opacity(
-              //         opacity: value as double,
-              //         child: child,
-              //       );
-              //     },
-              //     child: Container(
-              //       height: 5,
-              //       decoration: BoxDecoration(
-              //           shape: BoxShape.circle, color: Color(0xffffd46a)),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -730,6 +554,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void interpolate(double start, double end) {
     setState(() {
       increment = (end - start) / 60;
+    });
+  }
+
+  startTimer() {
+    Timer(Duration(seconds: 10), _startAnimation);
+  }
+
+  void _startAnimation() {
+    setState(() {
+      startAnimation = !startAnimation;
     });
   }
 }
