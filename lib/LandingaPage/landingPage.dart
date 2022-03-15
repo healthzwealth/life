@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
     _originalPanelHeight = _originalPanelHeight != 0
         ? _originalPanelHeight
-        : _panelHeightOpen - 60;
+        : _panelHeightOpen - 50;
 
     return SafeArea(
       child: Scaffold(
@@ -312,26 +312,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       alignment: Alignment.bottomRight,
                       height: 60,
                       padding: EdgeInsets.only(right: 30),
-                      child: Visibility(
-                        child: IconButton(
-                          icon: Image.asset('assets/chat_new.png'),
-                          onPressed: () {},
-                        ),
-                        visible: true,
+                      child: IconButton(
+                        icon: Image.asset('assets/chat_new.png'),
+                        onPressed: () {},
                       ),
                     )
-                  : Container(
-                      alignment: Alignment.bottomRight,
-                      height: 45,
-                      padding: EdgeInsets.only(right: 50),
-                      child: Visibility(
-                        child: IconButton(
-                          icon: Image.asset('assets/chat_new.png'),
-                          onPressed: () {},
-                        ),
-                        visible: false,
-                      ),
-                    ),
+                  : Container(),
               Transform(
                 transform: Matrix4.translationValues(100, 60, 0),
                 child: Container(
