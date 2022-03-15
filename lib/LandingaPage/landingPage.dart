@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final double _initFabHeight = 120.0;
   double _fabHeight = 0;
   double _panelHeightOpen = 10;
+  double _originalPanelHeight = 0;
 
   int _selectedIndex = 0;
   late TabController _tabController;
@@ -109,6 +110,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _panelHeightOpen = MediaQuery.of(context).size.height * .80;
+    _originalPanelHeight = _originalPanelHeight != 0
+        ? _originalPanelHeight
+        : _panelHeightOpen - 30;
 
     return SafeArea(
       child: Scaffold(
@@ -133,6 +137,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 print(_fabHeight);
               }),
             ),
+            _fabHeight >= _originalPanelHeight
+                ? Container(
+                    alignment: Alignment.bottomRight,
+                    height: 80,
+                    padding: EdgeInsets.only(right: 25, bottom: 30, top: 10),
+                    child: IconButton(
+                      icon: Image.asset('assets/chat_new.png'),
+                      onPressed: () {
+                        test();
+                      },
+                    ),
+                  )
+                : Container(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -556,7 +573,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       increment = (end - start) / 60;
     });
   }
-
+  
+  void test() {
+    print("Method Called.");
+  }
+  
   startTimer() {
     Timer(Duration(seconds: 10), _startAnimation);
   }
